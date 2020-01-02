@@ -1,0 +1,55 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>createpool</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-button (click) = "clickToOffice()" [style.background]="buttonColor">to office</ion-button>
+  <ion-button (click) = "clickFromOffice()">from Office</ion-button>
+  <ion-list>
+      <ion-item>
+        <ion-label>Start Date</ion-label>
+        <ion-datetime placeholder="Select Date" displayFormat="MMM DD, YYYY h:mm A" name="startDate" [(ngModel)]="datetime"></ion-datetime>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Destination</ion-label>
+        <ion-select ok-text="Okay" cancel-text="Nah" [(ngModel)]="destination">
+          <ion-select-option *ngFor="let point of points | async">{{point.points}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+    
+      <ion-item>
+        <ion-label *ngIf="toOffice; else elseBlock">Pickup Points</ion-label>
+        <ng-template #elseBlock><ion-label>Drop Points</ion-label></ng-template>
+        <ion-select multiple="true" cancelText="Nah" okText="Okay!" [(ngModel)]="locations">
+          <ion-select-option *ngFor="let point of points | async">{{point.points}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Seats</ion-label>
+        <ion-select ok-text="Okay" cancel-text="Nah" [(ngModel)]="seats">
+          <ion-select-option value="1">1</ion-select-option>
+          <ion-select-option value="2">2</ion-select-option>
+          <ion-select-option value="3">3</ion-select-option>
+          <ion-select-option value="4">4</ion-select-option>
+          <ion-select-option value="5">5</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Price</ion-label>
+        <ion-input type="number" value="45" [(ngModel)]="price"></ion-input>
+      </ion-item>
+  </ion-list>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+  <ion-button (click)="createRide()" expand="block">
+    Create Ride
+  </ion-button>
+  </ion-toolbar>
+</ion-footer>

@@ -1,0 +1,57 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>create</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-button class="button-float" routerLink="/createpool" routerDirection="forward">
+    <ion-icon slot="icon-only" name="add"></ion-icon>
+  </ion-button>
+
+<ion-content>
+
+    <ion-list *ngFor="let ride of rides | async">
+        
+            <ion-card>
+                <ion-item>
+                  <ion-icon name="pin" slot="start"></ion-icon>
+                  <ion-label>{{ride.destination}}</ion-label>
+                  
+                </ion-item>
+
+                <ion-item>
+                  <ion-icon name="calendar" slot="start"></ion-icon>
+                  <ion-label>{{ ride.datetime.seconds * 1000 | date:'mediumDate' }}</ion-label>
+                  
+                </ion-item>
+                <ion-item>
+                    <ion-icon name="calendar" slot="start"></ion-icon>
+                    <ion-label>{{ ride.datetime.seconds * 1000 | date:'shortTime' }}</ion-label>
+                    
+                  </ion-item>
+
+                <ion-item>
+                    <ion-icon name="contacts" slot="start"></ion-icon>
+                    <ion-label>{{ride.seats}}</ion-label>
+                </ion-item>
+
+                <ion-item>
+                    <ion-segment color="tertiary">
+                        <ion-segment-button>
+                          <ion-label>Points</ion-label>
+                          <ion-icon name="pin"></ion-icon>
+                        </ion-segment-button>
+                        <ion-segment-button checked>
+                          <ion-label>Edit</ion-label>
+                          <ion-icon name="create"></ion-icon>
+                        </ion-segment-button>
+                        <ion-segment-button>
+                          <ion-label>Cancel</ion-label>
+                          <ion-icon name="close"></ion-icon>
+                        </ion-segment-button>
+                      </ion-segment>
+                </ion-item>
+              </ion-card>
+        
+    </ion-list>
+</ion-content>
