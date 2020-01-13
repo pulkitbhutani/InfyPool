@@ -3,6 +3,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import {Ride} from '../interfaces/ride';
 import { AngularFireAuth } from '@angular/fire/auth';
 
+
 @Injectable({
   providedIn: 'root'
 })

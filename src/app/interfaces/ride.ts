@@ -4,7 +4,7 @@ import * as firebase from 'firebase/app';
 
 
 export interface Ride {
-    id?: string;
+    //id?: string;
     destination?: string;
     datetime?: firebase.firestore.Timestamp;//(seconds: number,nanoseconds: number);
     createdAt?: firebase.firestore.Timestamp;
