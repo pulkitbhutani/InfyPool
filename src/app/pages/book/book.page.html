@@ -7,6 +7,8 @@
 <ion-content>
     <ion-content>
 
+      <ion-button (click) = "listToOffice()">To office</ion-button>
+      <ion-button (click) = "listFromOffice()">From Office</ion-button>
         <ion-list *ngFor="let ride of rides | async">
             
                 <ion-card>

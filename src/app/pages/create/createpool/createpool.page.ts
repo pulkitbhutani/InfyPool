@@ -3,6 +3,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import {RideService} from '../../../services/ride.service';
 import {Ride} from '../../../interfaces/ride';
+import {  NavController, NavParams } from '@ionic/angular';
 //import {firebase} from '@angular/fire/firebase-node';
 import * as firebase from 'firebase/app';
 
@@ -27,7 +28,7 @@ export class CreatepoolPage implements OnInit {
   //let firestamp = new ;
   
 
-  constructor(db: AngularFirestore, private rideService: RideService) { 
+  constructor(db: AngularFirestore, private rideService: RideService, private navCtrl : NavController ) { 
     this.points = db.collection('pickupdroppoints').valueChanges();
     this.ride = {};
   }
@@ -52,6 +53,10 @@ export class CreatepoolPage implements OnInit {
     this.ride.toOffice = this.toOffice;
     
     this.rideService.addRide(this.ride);
+    this.rideService.getRidesByUser();
+
+    this.navCtrl.navigateBack('/tabs/create');
+    
   }
 
   clickToOffice()

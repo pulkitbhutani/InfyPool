@@ -5,6 +5,7 @@ import {Router} from '@angular/router';
 import {Ride} from '../../interfaces/ride';
 import { map } from 'rxjs/operators';
 import {BookService} from '../../services/book.service';
+import {RideService} from '../../services/ride.service';
 
 @Component({
   selector: 'app-book',
@@ -14,29 +15,35 @@ import {BookService} from '../../services/book.service';
 export class BookPage implements OnInit {
   
   rides: Observable<any[]>;
+  toOffice: boolean;
  
-  constructor(db: AngularFirestore, private router: Router, private bookService: BookService ) { 
+  constructor(db: AngularFirestore, private router: Router, private bookService: BookService , private rideService: RideService) { 
 
-    //always use snapshotchanges when you want metadata as well with the collection data, it helps with much complex data.
-    this.rides = db.collection('rides').snapshotChanges().pipe(
-      map(actions => actions.map(a => {
-        const data = a.payload.doc.data() as Ride;
-        const id = a.payload.doc.id;
-        return { id, ...data };
-      }))
-    );
-
-}
+  }
 
   ngOnInit() {
+    this.rides = this.rideService.getRides(true);
+    //console.log(this.rides);
   }
 
   bookRide(rideId : string)
   {
-    console.log(rideId);
+    //console.log(rideId);
     this.router.navigate(['createbooking']);
     this.bookService.saveCurrentRideId(rideId);
      //routerLink="/createbooking" routerDirection="forward"
+  }
+
+  listToOffice()
+  {
+    this.toOffice = true;
+    this.rides = this.rideService.getRides(this.toOffice);
+  }
+
+  listFromOffice()
+  {
+    this.toOffice = false;
+    this.rides = this.rideService.getRides(this.toOffice)
   }
 
 }

@@ -49,6 +49,12 @@ ngOnInit(){
 
   }
 
+  getUserBookings()
+  {
+    return this.afs.collection('bookings',ref => ref.where('userId' ,'==', this.userId))
+    .valueChanges();
+  }
+
   addBooking(booking: Booking){
     booking.rideId = this.rideId;
     booking.userId = this.userId;
