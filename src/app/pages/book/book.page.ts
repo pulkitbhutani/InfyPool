@@ -30,7 +30,7 @@ export class BookPage implements OnInit {
   {
     //console.log(rideId);
     this.router.navigate(['createbooking']);
-    this.bookService.saveCurrentRideId(rideId);
+    this.bookService.saveCurrentRideIdAndDateTime(rideId);
      //routerLink="/createbooking" routerDirection="forward"
   }
 

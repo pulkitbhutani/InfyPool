@@ -9,7 +9,7 @@
 
       <ion-button (click) = "listToOffice()">To office</ion-button>
       <ion-button (click) = "listFromOffice()">From Office</ion-button>
-        <ion-list *ngFor="let booking of bookings">
+        <ion-list *ngFor="let booking of bookings | async">
             
                 <ion-card>
                     <ion-item>
@@ -18,13 +18,23 @@
                       
                     </ion-item>
                     <ion-item>
+                      <ion-icon name="calendar" slot="start"></ion-icon>
+                      <ion-label>{{ booking.poolDateTime.seconds * 1000 | date:'mediumDate' }}</ion-label>
+                      
+                    </ion-item>
+                    <ion-item>
+                        <ion-icon name="calendar" slot="start"></ion-icon>
+                        <ion-label>{{ booking.poolDateTime.seconds * 1000 | date:'shortTime' }}</ion-label>
+                        
+                      </ion-item>
+                    <ion-item>
                         <ion-icon name="contacts" slot="start"></ion-icon>
                         <ion-label>{{booking.seats}}</ion-label>
                     </ion-item>
     
                     <ion-item>
                         <ion-button fill="outline" slot="end">View</ion-button>
-                        <ion-button fill="outline" slot="end">Cancel</ion-button>
+                        <ion-button fill="outline" slot="end" (click)="cancelBooking(booking.id, booking.rideId, booking.seats)">Cancel</ion-button>
                     </ion-item>
                   </ion-card>
             

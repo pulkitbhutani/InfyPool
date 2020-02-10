@@ -15,6 +15,7 @@ export class RideService {
   private rideCollection = this.afs.collection<Ride>('rides');
 
   userId: string;
+  seatsLeft: number;
   datetime = new Date();
   datetimeTimestamp : firebase.firestore.Timestamp;
    
@@ -43,10 +44,18 @@ ngOnInit(){
   }
 
   getRidesByUser(){
+    console.log(this.userId);
+    console.log(this.datetimeTimestamp);
     //return this.afs.collection('rides',ref => ref.where('userId' ,'==', this.userId).orderBy('createdAt'))
     //.valueChanges();
-    return this.afs.collection('rides',ref => ref.where('userId' ,'==', this.userId).where('datetime','>=',this.datetimeTimestamp).orderBy('datetime'))
+    return this.afs.collection('rides',ref => ref.where('userId' ,'==', this.userId).where('datetime','>=',this.datetimeTimestamp))
+    //.orderBy('datetime'))
     .valueChanges();
+  }
+
+  getRideInfo(rideId : string)
+  {
+    return this.afs.collection("rides").doc(rideId).valueChanges();
   }
 
   addRide(ride: Ride){

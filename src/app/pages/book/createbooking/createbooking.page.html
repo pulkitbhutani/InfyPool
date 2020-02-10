@@ -20,8 +20,8 @@
     <ion-item>
       <ion-label>Seats</ion-label>
       <ion-select ok-text="Okay" cancel-text="Nah" [(ngModel)]="seatsBooked">
-        <ion-select-option value="1">1</ion-select-option>
-        <ion-select-option value="2">2</ion-select-option>
+        <ion-select-option [value]=1>1</ion-select-option>
+        <ion-select-option [value]=2>2</ion-select-option>
       </ion-select>
     </ion-item>
   </ion-list>

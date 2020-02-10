@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {BookService} from '../../services/book.service';
 import { Booking } from '../../interfaces/booking';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-booked',
@@ -9,19 +10,22 @@ import { Booking } from '../../interfaces/booking';
 })
 export class BookedPage implements OnInit {
 
-  bookings: Booking[];
+  bookings: Observable<any[]>;
 
   constructor(private bookService : BookService) { }
 
   ngOnInit() {
-    this.getUserBookings();
+    //this.getUserBookings();
+    //this.bookService.getUserBookings().subscribe((data : Booking[]) => 
+    //{this.bookings = data;
+    //console.log(data);
+    //});
+    this.bookings = this.bookService.getUserBookings();
   }
 
-  getUserBookings()
+  cancelBooking(bookingId : string, rideId: string, bookedSeats : number)
   {
-    this.bookService.getUserBookings().subscribe((data : Booking[]) => 
-    {this.bookings = data}
-    );
+    this.bookService.cancelBooking(bookingId,rideId, bookedSeats);
   }
 
 }
