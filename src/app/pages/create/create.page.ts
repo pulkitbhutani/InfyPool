@@ -4,6 +4,7 @@ import { NavController, NavParams } from '@ionic/angular';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Ride } from '../../interfaces/ride';
+import {AlertController} from '@ionic/angular';
 
 @Component({
   selector: 'app-create',
@@ -12,10 +13,10 @@ import { Ride } from '../../interfaces/ride';
 })
 export class CreatePage implements OnInit {
   
-  //rides : Observable<any[]>;
-  rides : Ride[];
+  rides : Observable<any[]>;
+  //rides : Ride[];
   //rides: 
-  constructor(private rideService: RideService) { 
+  constructor(private rideService: RideService, public alertController: AlertController) { 
     //this.rides = db.collection('rides').valueChanges();
     //this.rides = rideService.getRides();
   }
@@ -27,9 +28,31 @@ export class CreatePage implements OnInit {
 
   getRideByUser()
   {
-    this.rideService.getRidesByUser().subscribe((data : Ride[]) => 
-    {this.rides = data}
-    );
+    this.rides = this.rideService.getRidesByUser();
+  }
+
+  async cancelPool(rideId: string)
+  {
+    const alert = await this.alertController.create({
+      header: 'Cancel Pool',
+      //subHeader: 'Incorrect Credentials',
+      message: 'Cancel your Pool?',
+      buttons: [{
+        text: 'Cancel',
+        role: 'cancel',
+        cssClass: 'secondary',
+        handler: () => {
+          console.log('Confirm Cancel');
+        }
+      }, {
+        text: 'Ok',
+        handler: () => {
+          //console.log(rideId);
+          this.rideService.cancelPool(rideId);
+        }
+      }]
+    });
+    await alert.present();
   }
 
 }

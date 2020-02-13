@@ -16,6 +16,7 @@ export class RideService {
 
   userId: string;
   seatsLeft: number;
+  idss: string[];
   datetime = new Date();
   datetimeTimestamp : firebase.firestore.Timestamp;
    
@@ -48,9 +49,17 @@ ngOnInit(){
     console.log(this.datetimeTimestamp);
     //return this.afs.collection('rides',ref => ref.where('userId' ,'==', this.userId).orderBy('createdAt'))
     //.valueChanges();
-    return this.afs.collection('rides',ref => ref.where('userId' ,'==', this.userId).where('datetime','>=',this.datetimeTimestamp))
+    //return this.afs.collection('rides',ref => ref.where('userId' ,'==', this.userId).where('datetime','>=',this.datetimeTimestamp))
     //.orderBy('datetime'))
-    .valueChanges();
+    //.valueChanges();
+    return this.afs.collection('rides',ref => ref.where('userId' ,'==', this.userId).where('datetime','>=',this.datetimeTimestamp)
+    .orderBy('datetime')).snapshotChanges().pipe(
+      map(actions => actions.map(a => {
+        const data = a.payload.doc.data() as Ride;
+        const id = a.payload.doc.id;
+        return { id, ...data };
+      }))
+    );
   }
 
   getRideInfo(rideId : string)
@@ -67,7 +76,29 @@ ngOnInit(){
 
   }
 
-  deleteRide(id: number){
-
+  cancelPool(rideId :string)
+  {
+    //update seats for the booking
+    //delete booking
+    this.afs.collection('rides').doc(rideId).delete();
+    //var deleteBookings_query = this.afs.collection('bookings').
+    var deleteBookings_query = this.afs.collection('bookings',ref=>ref.where('rideId','==',rideId));
+    
+    //gets all the bookings for the canceled pool
+    var bookingIds = deleteBookings_query.snapshotChanges().pipe(
+      map(actions => actions.map(a => {
+        return a.payload.doc.id;
+      }))
+    );
+    
+    //cancels all the booking for the canceled pool.
+    bookingIds.subscribe(res =>{
+      this.idss = res;
+      for(var id of this.idss)
+      {
+        this.afs.collection('bookings').doc(id).delete();
+      }
+    });
   }
+  
 }

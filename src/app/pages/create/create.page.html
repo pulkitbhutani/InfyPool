@@ -10,7 +10,7 @@
 
 <ion-content>
 
-    <ion-list *ngFor="let ride of rides">
+    <ion-list *ngFor="let ride of rides | async">
         
             <ion-card>
                 <ion-item>
@@ -45,7 +45,7 @@
                           <ion-label>Edit</ion-label>
                           <ion-icon name="create"></ion-icon>
                         </ion-segment-button>
-                        <ion-segment-button>
+                        <ion-segment-button (click)="cancelPool(ride.id)">
                           <ion-label>Cancel</ion-label>
                           <ion-icon name="close"></ion-icon>
                         </ion-segment-button>

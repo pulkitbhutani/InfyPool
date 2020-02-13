@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {BookService} from '../../services/book.service';
 import { Booking } from '../../interfaces/booking';
 import { Observable } from 'rxjs';
+import {AlertController} from '@ionic/angular';
 
 @Component({
   selector: 'app-booked',
@@ -12,7 +13,7 @@ export class BookedPage implements OnInit {
 
   bookings: Observable<any[]>;
 
-  constructor(private bookService : BookService) { }
+  constructor(private bookService : BookService, public alertController: AlertController) { }
 
   ngOnInit() {
     //this.getUserBookings();
@@ -23,9 +24,28 @@ export class BookedPage implements OnInit {
     this.bookings = this.bookService.getUserBookings();
   }
 
-  cancelBooking(bookingId : string, rideId: string, bookedSeats : number)
+  async cancelBooking(bookingId : string, rideId: string, bookedSeats : number)
   {
-    this.bookService.cancelBooking(bookingId,rideId, bookedSeats);
+    const alert = await this.alertController.create({
+      header: 'Cancel',
+      //subHeader: 'Incorrect Credentials',
+      message: 'Cancel your Booking ?',
+      buttons: [{
+        text: 'Cancel',
+        role: 'cancel',
+        cssClass: 'secondary',
+        handler: () => {
+          console.log('Confirm Cancel');
+        }
+      }, {
+        text: 'Ok',
+        handler: () => {
+          this.bookService.cancelBooking(bookingId,rideId, bookedSeats);
+        }
+      }]
+    });
+    await alert.present();
   }
 
+    
 }
