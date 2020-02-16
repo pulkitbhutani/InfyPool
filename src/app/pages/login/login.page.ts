@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,  EventEmitter, Output } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import {  NavController, NavParams } from '@ionic/angular';
 import {AlertController} from '@ionic/angular';
 import { auth } from 'firebase/app';
+import { Events } from '@ionic/angular';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +15,9 @@ export class LoginPage implements OnInit {
   username : string="";
   password : string ="";
 
-  constructor(public afAuth: AngularFireAuth, public alertController: AlertController, private navCtrl : NavController) { }
+  @Output() authState = new EventEmitter();
+
+  constructor(public afAuth: AngularFireAuth, public alertController: AlertController, private navCtrl : NavController,public events: Events) { }
 
   
 
@@ -26,11 +29,13 @@ export class LoginPage implements OnInit {
     const{username,password} = this
 
     try{
-      const res = await this.afAuth.auth.signInWithEmailAndPassword(username,password);
-      if(res)
+      const user = await this.afAuth.auth.signInWithEmailAndPassword(username,password);
+      if(user)
       {
         console.log("sucessfully logged in");
-        this.navCtrl.navigateForward('/tabs')
+        window.dispatchEvent(new CustomEvent('user:login'));
+        this.navCtrl.navigateForward('/userdetails');
+        //this.navCtrl.navigateForward('/tabs');
       }  
     } catch(err){
       console.dir(err)
