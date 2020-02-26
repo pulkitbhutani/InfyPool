@@ -11,7 +11,8 @@ const routes: Routes = [
   { path: 'tabs', loadChildren: './pages/tabs/tabs.module#TabsPageModule'},
   { path: 'createpool', loadChildren: './pages/create/createpool/createpool.module#CreatepoolPageModule' },
   { path: 'createbooking', loadChildren: './pages/book/createbooking/createbooking.module#CreatebookingPageModule' },
-  { path: 'userdetails', loadChildren: './pages/userdetails/userdetails.module#UserdetailsPageModule' }
+  { path: 'userdetails', loadChildren: './pages/userdetails/userdetails.module#UserdetailsPageModule' },
+  { path: 'profile', loadChildren: './pages/profile/profile.module#ProfilePageModule' }
   
 ];
 @NgModule({

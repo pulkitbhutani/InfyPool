@@ -14,7 +14,7 @@ import * as firebase from 'firebase/app';
 })
 export class CreatepoolPage implements OnInit {
 
-  datetime = new Date();//.getTime();
+  datetime = new Date().toISOString();//.getTime();
   toOffice : boolean = true;
   destination : string;
   locations : string[];
@@ -25,6 +25,9 @@ export class CreatepoolPage implements OnInit {
 
   ride : Ride;
   points: Observable<any[]>;
+  backgroundColor : string;
+  minDate: string = new Date().toISOString();
+  maxDate = new Date();
   //let firestamp = new ;
   
 
@@ -62,7 +65,11 @@ export class CreatepoolPage implements OnInit {
   clickToOffice()
   {
     this.toOffice = true;
+    this.destination = 'Infosys Jaipur';
     //this.buttonColor = 'success';
+    this.backgroundColor = 'success'
+    console.log(this.datetime);
+    //console.log(this.datetimetest);
     console.log(this.toOffice);
   }
 

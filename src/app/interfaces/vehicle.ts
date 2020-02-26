@@ -1,7 +1,7 @@
 import * as firebase from 'firebase/app';
 
 
-export interface VehicleDetail {
+export interface Vehicle {
     userId?: string;
     carModel?: string;
     carColor?: string;

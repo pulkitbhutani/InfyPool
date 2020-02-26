@@ -4,6 +4,10 @@ import {  NavController, NavParams } from '@ionic/angular';
 import {AlertController} from '@ionic/angular';
 import { auth } from 'firebase/app';
 import { Events } from '@ionic/angular';
+import {UserService} from '../../services/user.service';
+import { UserDetail } from '../../interfaces/userDetail';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -14,10 +18,11 @@ export class LoginPage implements OnInit {
 
   username : string="";
   password : string ="";
+  userDetailId: string;
 
   @Output() authState = new EventEmitter();
 
-  constructor(public afAuth: AngularFireAuth, public alertController: AlertController, private navCtrl : NavController,public events: Events) { }
+  constructor(private afs: AngularFirestore,public afAuth: AngularFireAuth, public alertController: AlertController,private userService : UserService, private navCtrl : NavController,public events: Events) { }
 
   
 
@@ -34,10 +39,28 @@ export class LoginPage implements OnInit {
       {
         console.log("sucessfully logged in");
         window.dispatchEvent(new CustomEvent('user:login'));
-        this.navCtrl.navigateForward('/userdetails');
+        
+        this.userService.checkDetailsExist(user.user.uid).subscribe(res=> {
+          this.userDetailId = res[0];
+          
+          if(this.userDetailId)
+          {
+            this.navCtrl.navigateForward('/tabs');
+          }
+          else
+          {
+            this.navCtrl.navigateForward('/userdetails');
+          }
+        });
+        
+            
+         
+      }
+        //console.log(data);
+        
         //this.navCtrl.navigateForward('/tabs');
-      }  
-    } catch(err){
+      } 
+     catch(err){
       console.dir(err)
       if(err.code === "auth/user-not-found"){
         const alert = await this.alertController.create({
