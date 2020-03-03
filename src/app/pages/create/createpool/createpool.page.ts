@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import {RideService} from '../../../services/ride.service';
 import {Ride} from '../../../interfaces/ride';
 import {  NavController, NavParams } from '@ionic/angular';
+import {AlertController} from '@ionic/angular';
 //import {firebase} from '@angular/fire/firebase-node';
 import * as firebase from 'firebase/app';
 
@@ -26,17 +27,27 @@ export class CreatepoolPage implements OnInit {
   ride : Ride;
   points: Observable<any[]>;
   backgroundColor : string;
-  minDate: string = new Date().toISOString();
-  maxDate = new Date();
+  curDate = new Date();
+  minDate : string;
+  isValid : boolean;
+  curDateTime = new Date();
+  //minDate = new Date().toISOString();
+  //maxDate = new Date();
   //let firestamp = new ;
   
 
-  constructor(db: AngularFirestore, private rideService: RideService, private navCtrl : NavController ) { 
+  constructor(db: AngularFirestore, private rideService: RideService,public alertController: AlertController, private navCtrl : NavController ) { 
     this.points = db.collection('pickupdroppoints').valueChanges();
     this.ride = {};
+    
+    //this.curDate.toISOString();
+    //console.log(this.minDate);
   }
   
   ngOnInit() {
+    this.curDate.setHours(0,0,0,0);
+    this.minDate = this.curDate.toISOString();
+    console.log(this.minDate);
   }
 
   todo = {}
@@ -44,8 +55,13 @@ export class CreatepoolPage implements OnInit {
     console.log(this.todo)
   }
   
-  createRide()
+  async createRide()
   {
+
+    this.isValid = this.checkPoolTime(this.datetime);
+    
+    if(this.isValid)
+    {
     //below date is formatted again to date from iso
     this.ride.datetime = firebase.firestore.Timestamp.fromDate(new Date(this.datetime));
     this.ride.createdAt = firebase.firestore.Timestamp.fromDate(this.createdAt);
@@ -56,10 +72,34 @@ export class CreatepoolPage implements OnInit {
     this.ride.toOffice = this.toOffice;
     
     this.rideService.addRide(this.ride);
-    this.rideService.getRidesByUser();
 
-    this.navCtrl.navigateBack('/tabs/create');
-    
+    const alert = await this.alertController.create({
+      header: 'Car Pool Created',
+      //subHeader: 'Incorrect Credentials',
+      message: 'Car Pool Sucessfully Created',
+      buttons: [{
+        text :'OK',
+      handler: () => {
+        this.rideService.getRidesByUser();
+        this.navCtrl.navigateBack('/tabs/create');
+      }
+      }]
+      
+    });
+    await alert.present();
+
+    }
+
+    else 
+    {
+      const alert = await this.alertController.create({
+        header: 'Check Pool Time',
+        //subHeader: 'Incorrect Credentials',
+        message: 'Time Selected in Past',
+        buttons: ['OK']
+      });
+      await alert.present();
+    }
   }
 
   clickToOffice()
@@ -71,6 +111,19 @@ export class CreatepoolPage implements OnInit {
     console.log(this.datetime);
     //console.log(this.datetimetest);
     console.log(this.toOffice);
+  }
+
+  checkPoolTime(poolDateTime : string)
+  {
+    
+    if(this.curDateTime< new Date(poolDateTime))
+    {
+      return true;
+    }
+    else
+    {
+      return false;
+    }
   }
 
   clickFromOffice()

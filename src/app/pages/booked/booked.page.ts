@@ -3,6 +3,7 @@ import {BookService} from '../../services/book.service';
 import { Booking } from '../../interfaces/booking';
 import { Observable } from 'rxjs';
 import {AlertController} from '@ionic/angular';
+import * as firebase from 'firebase/app';
 
 @Component({
   selector: 'app-booked',
@@ -12,6 +13,9 @@ import {AlertController} from '@ionic/angular';
 export class BookedPage implements OnInit {
 
   bookings: Observable<any[]>;
+  poolStarted : boolean;
+  datetime = new Date();
+  datetimeTimestamp : firebase.firestore.Timestamp;
 
   constructor(private bookService : BookService, public alertController: AlertController) { }
 
@@ -22,6 +26,7 @@ export class BookedPage implements OnInit {
     //console.log(data);
     //});
     this.bookings = this.bookService.getUserBookings();
+    this.datetimeTimestamp = firebase.firestore.Timestamp.fromDate(new Date(this.datetime));
   }
 
   async cancelBooking(bookingId : string, rideId: string, bookedSeats : number)

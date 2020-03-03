@@ -6,6 +6,7 @@ import {Booking} from '../../../interfaces/booking';
 import {Ride} from '../../../interfaces/ride';
 import { map } from 'rxjs/operators';
 import {AlertController} from '@ionic/angular';
+import {  NavController, NavParams } from '@ionic/angular';
 import * as firebase from 'firebase/app';
 
 
@@ -28,7 +29,7 @@ export class CreatebookingPage implements OnInit {
   isValid : boolean;
   createdAt = new Date();
 
-  constructor(private bookService : BookService,public alertController: AlertController, private rideService :RideService) {
+  constructor(private bookService : BookService,public alertController: AlertController, private rideService :RideService,private navCtrl : NavController ) {
     this.booking = {};
   }
 
@@ -59,7 +60,13 @@ export class CreatebookingPage implements OnInit {
         header: 'Car Pool Booked',
         //subHeader: 'Incorrect Credentials',
         message: this.seatsBooked + 'Seats Booked for you.',
-        buttons: ['OK']
+        buttons: [{
+          text :'OK',
+        handler: () => {
+          this.navCtrl.navigateBack('/tabs/book');
+        }
+        }]
+        
       });
       await alert.present();
     }

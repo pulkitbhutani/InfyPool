@@ -29,6 +29,7 @@ export class BookService {
 
   constructor(private afs: AngularFirestore, private afAuth: AngularFireAuth, private rideService: RideService, public alertController :AlertController) {
     this.userId =  this.afAuth.auth.currentUser.uid;
+    this.datetime.setHours(0,0,0,0);
     this.datetimeTimestamp = firebase.firestore.Timestamp.fromDate(new Date(this.datetime))
 }
 
@@ -94,6 +95,7 @@ ngOnInit(){
   cancelBooking(bookingId: string, rideId :string, seatsBooked : number)
   {
     this.saveCurrentRideIdAndDateTime(rideId);
+
     //update seats for the booking
     this.afs.collection('rides').doc(rideId).update({
       seats : this.seatsLeft + seatsBooked

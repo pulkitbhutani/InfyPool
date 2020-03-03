@@ -5,6 +5,8 @@ import {RouteDetail} from '../../interfaces/routeDetail';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import {UserService} from '../../services/user.service';
+import {  NavController, NavParams } from '@ionic/angular';
+import {AlertController} from '@ionic/angular';
 
 @Component({
   selector: 'app-userdetails',
@@ -33,7 +35,7 @@ export class UserdetailsPage implements OnInit {
 
 
 
-  constructor(private db: AngularFirestore, private userService : UserService) {
+  constructor(private db: AngularFirestore, private userService : UserService,public alertController: AlertController, private navCtrl : NavController) {
     this.points = db.collection('pickupdroppoints').valueChanges();
     this.userInfo = {};
     this.vehicle = {};
@@ -51,7 +53,7 @@ export class UserdetailsPage implements OnInit {
   }
 
 
-  addUserDetails()
+  async addUserDetails()
   {
     //user info which is to be updated.
     this.userInfo.firstName = this.firstName;
@@ -76,6 +78,21 @@ export class UserdetailsPage implements OnInit {
 
       this.userService.addVehicleandRouteDetails(this.vehicle,this.routeInfo);
     }
+
+    const alert = await this.alertController.create({
+      header: 'Thanks For Sharing Your Details',
+      //subHeader: 'Incorrect Credentials',
+      message: 'You can start using the app now',
+      buttons: [{
+        text :'OK',
+      handler: () => {
+        this.navCtrl.navigateForward('/tabs/book');
+      }
+      }]
+      
+    });
+    await alert.present();
+
 
   }
 
