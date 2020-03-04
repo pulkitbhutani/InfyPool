@@ -16,6 +16,7 @@ export class BookedPage implements OnInit {
   poolStarted : boolean;
   datetime = new Date();
   datetimeTimestamp : firebase.firestore.Timestamp;
+  bookingLabel : string;
 
   constructor(private bookService : BookService, public alertController: AlertController) { }
 
@@ -50,7 +51,6 @@ export class BookedPage implements OnInit {
       }]
     });
     await alert.present();
-  }
-
-    
+  } 
 }
+

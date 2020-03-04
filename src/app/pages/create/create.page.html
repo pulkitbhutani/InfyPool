@@ -38,22 +38,28 @@
                     <ion-label>{{ride.seats}}</ion-label>
                 </ion-item>
 
-                <ion-item>
-                    <ion-segment color="tertiary">
-                        <ion-segment-button>
-                          <ion-label>Points</ion-label>
-                          <ion-icon name="pin"></ion-icon>
-                        </ion-segment-button>
-                        <ion-segment-button checked>
-                          <ion-label>Edit</ion-label>
-                          <ion-icon name="create"></ion-icon>
-                        </ion-segment-button>
-                        <ion-segment-button (click)="cancelPool(ride.id)">
-                          <ion-label>Cancel</ion-label>
-                          <ion-icon name="close"></ion-icon>
-                        </ion-segment-button>
-                      </ion-segment>
+                <ion-item *ngIf="ride.datetime<datetimeTimestamp; else elseBlock">
+                  <ion-label >Booking Started</ion-label>
                 </ion-item>
+                <ng-template #elseBlock>
+                  <ion-item>
+                    <ion-segment color="tertiary">
+                      <ion-segment-button>
+                        <ion-label>Points</ion-label>
+                        <ion-icon name="pin"></ion-icon>
+                      </ion-segment-button>
+                      <ion-segment-button checked>
+                        <ion-label>Edit</ion-label>
+                        <ion-icon name="create"></ion-icon>
+                      </ion-segment-button>
+                      <ion-segment-button (click)="cancelPool(ride.id)">
+                        <ion-label>Cancel</ion-label>
+                        <ion-icon name="close"></ion-icon>
+                      </ion-segment-button>
+                    </ion-segment>
+                   </ion-item>
+                 </ng-template>
+
               </ion-card>
         
     </ion-list>

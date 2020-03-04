@@ -30,7 +30,7 @@ export class BookService {
   constructor(private afs: AngularFirestore, private afAuth: AngularFireAuth, private rideService: RideService, public alertController :AlertController) {
     this.userId =  this.afAuth.auth.currentUser.uid;
     this.datetime.setHours(0,0,0,0);
-    this.datetimeTimestamp = firebase.firestore.Timestamp.fromDate(new Date(this.datetime))
+    this.datetimeTimestamp = firebase.firestore.Timestamp.fromDate(new Date(this.datetime));
 }
 
 ngOnInit(){
@@ -70,7 +70,7 @@ ngOnInit(){
     //return this.afs.collection('rides', ref=> ref.where('toOffice','==', true).orderBy('createdAt')).snapshotChanges();
     //always use snapshotchanges when you want metadata as well with the collection data, it helps with much complex data.
     return this.afs.collection('bookings',ref => ref.where('userId' ,'==', this.userId).where('poolDateTime','>=',this.datetimeTimestamp)
-    .orderBy('poolDateTime')).snapshotChanges().pipe(
+    .orderBy('poolDateTime','desc')).snapshotChanges().pipe(
       map(actions => actions.map(a => {
         const data = a.payload.doc.data() as Booking;
         const id = a.payload.doc.id;

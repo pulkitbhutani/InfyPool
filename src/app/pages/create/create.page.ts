@@ -5,6 +5,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Ride } from '../../interfaces/ride';
 import {AlertController} from '@ionic/angular';
+import * as firebase from 'firebase/app';
 
 @Component({
   selector: 'app-create',
@@ -14,11 +15,14 @@ import {AlertController} from '@ionic/angular';
 export class CreatePage implements OnInit {
   
   rides : Observable<any[]>;
+  datetime = new Date();
+  datetimeTimestamp : firebase.firestore.Timestamp;
   //rides : Ride[];
   //rides: 
   constructor(private rideService: RideService, public alertController: AlertController) { 
     //this.rides = db.collection('rides').valueChanges();
     //this.rides = rideService.getRides();
+    this.datetimeTimestamp = firebase.firestore.Timestamp.fromDate(new Date(this.datetime));
   }
 
   ngOnInit() {

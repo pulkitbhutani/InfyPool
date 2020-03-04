@@ -52,7 +52,8 @@ ngOnInit(){
     //return this.afs.collection('rides',ref => ref.where('userId' ,'==', this.userId).where('datetime','>=',this.datetimeTimestamp))
     //.orderBy('datetime'))
     //.valueChanges();
-    return this.afs.collection('rides',ref => ref.where('userId' ,'==', this.userId).where('datetime','>=',this.datetimeTimestamp)
+    return this.afs.collection('rides',ref => ref.where('userId' ,'==', this.userId)
+    .where('datetime','>=',firebase.firestore.Timestamp.fromDate(new Date(this.datetime.setHours(0,0,0,0))))
     .orderBy('datetime')).snapshotChanges().pipe(
       map(actions => actions.map(a => {
         const data = a.payload.doc.data() as Ride;

@@ -35,10 +35,17 @@
                         <ion-label>{{booking.seats}}</ion-label>
                     </ion-item>
     
-                    <ion-item>
-                        <ion-button fill="outline" slot="end">View</ion-button>
-                        <ion-button fill="outline" slot="end" (click)="cancelBooking(booking.id, booking.rideId, booking.seats)" >Cancel</ion-button>
+                    <ion-item *ngIf="booking.poolDateTime<datetimeTimestamp; else elseBlock">
+                      <ion-label >Booking Started</ion-label>
                     </ion-item>
+                    <ng-template #elseBlock>
+                      <ion-item>
+                         <ion-label>Chat icon</ion-label>
+                         <ion-button fill="outline" slot="end" (click)="cancelBooking(booking.id, booking.rideId, booking.seats)">Cancel</ion-button>
+                       </ion-item>
+                     </ng-template>
+                      
+                    
                   </ion-card>
             
         </ion-list>
