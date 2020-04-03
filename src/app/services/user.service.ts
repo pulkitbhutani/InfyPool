@@ -23,7 +23,7 @@ export class UserService {
     }
     
     ngOnInit(){
-      //this.userId =  this.afAuth.auth.currentUser.uid;
+      
     }
 
     addUserDetails(user : UserDetail)
@@ -55,6 +55,15 @@ export class UserService {
             }))
           );
     }
+
+    getCurrentUserStartPoint()
+    {
+      this.userId =  this.afAuth.auth.currentUser.uid;
+
+      return this.afs.collection("users", ref=> ref.where('userId','==',this.userId)).valueChanges();
+    }
+
+    
 
        
 }

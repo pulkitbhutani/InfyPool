@@ -6,6 +6,7 @@ import {Ride} from '../../interfaces/ride';
 import { map } from 'rxjs/operators';
 import {BookService} from '../../services/book.service';
 import {RideService} from '../../services/ride.service';
+import {AlertController} from '@ionic/angular';
 
 @Component({
   selector: 'app-book',
@@ -17,17 +18,17 @@ export class BookPage implements OnInit {
   rides: Observable<any[]>;
   toOffice: boolean;
  
-  constructor(db: AngularFirestore, private router: Router, private bookService: BookService , private rideService: RideService) { 
+  constructor(db: AngularFirestore,public alertController: AlertController, private router: Router, private bookService: BookService , private rideService: RideService) { 
 
   }
 
   ngOnInit() {
     this.rides = this.rideService.getRides(true);
-    //console.log(this.rides);
+
+    console.log(this.rides);
   }
 
-  bookRide(rideId : string)
-  {
+  bookRide(rideId : string) {
     //console.log(rideId);
     this.router.navigate(['createbooking']);
     this.bookService.saveCurrentRideIdAndDateTime(rideId);
@@ -44,6 +45,43 @@ export class BookPage implements OnInit {
   {
     this.toOffice = false;
     this.rides = this.rideService.getRides(this.toOffice)
+  }
+
+  doRefresh(event) {
+    console.log('Begin async operation');
+    this.rides = this.rideService.getRides(true);
+    setTimeout(() => {
+      console.log('Async operation has ended');
+      event.target.complete();
+    }, 2000);
+  }
+
+  async presentAlertConfirm(stops : string[]) {
+    
+    //below code creates a string of list and plugs in to alert to display the stops.
+    let stopsStr = "<ul>"
+    let stopsStrEnd = "</ul>"
+    for(var stop of stops)
+    {
+      stopsStr = stopsStr + "<li>" + stop + "</li>"; 
+    }
+    stopsStr = stopsStr + stopsStrEnd;
+
+    const alert = await this.alertController.create({
+      header: 'Stops',
+    
+      message: stopsStr,
+      buttons: [
+        {
+          text: 'Okay',
+          handler: () => {
+            console.log('Confirm Okay');
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 
 }

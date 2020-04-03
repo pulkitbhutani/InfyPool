@@ -8,8 +8,10 @@
 </ion-header>
 
 <ion-content>
-  <ion-button (click) = "clickToOffice()" [ngStyle]="{'background-color': backgroundColor}">to office</ion-button>
-  <ion-button (click) = "clickFromOffice()">to home</ion-button>
+  <ion-button (click) = "clickToOffice()" *ngIf= "!toOffice">to office</ion-button>
+  <ion-button (click) = "clickToOffice()" *ngIf= "toOffice" color="success">to office</ion-button>
+  <ion-button (click) = "clickFromOffice()" *ngIf= "toOffice">to home</ion-button>
+  <ion-button (click) = "clickFromOffice()" *ngIf= "!toOffice" color="success">to home</ion-button>
   <ion-list>
       <ion-item>
         <ion-label>Start Date</ion-label>

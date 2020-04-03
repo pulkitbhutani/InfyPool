@@ -12,8 +12,15 @@
 
       <ion-button (click) = "listToOffice()">To office</ion-button>
       <ion-button (click) = "listFromOffice()">From Office</ion-button>
+      <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content 
+          pullingIcon="arrow-dropdown"
+          pullingText="Pull to refresh"
+          refreshingSpinner="circles"
+          refreshingText="Refreshing...">
+        </ion-refresher-content>
+      </ion-refresher>
         <ion-list *ngFor="let ride of rides | async">
-            
                 <ion-card>
                     <ion-item>
                       <ion-icon name="pin" slot="start"></ion-icon>
@@ -27,7 +34,7 @@
                       
                     </ion-item>
                     <ion-item>
-                        <ion-icon name="calendar" slot="start"></ion-icon>
+                        <ion-icon name="clock" slot="start"></ion-icon>
                         <ion-label>{{ ride.datetime.seconds * 1000 | date:'shortTime' }}</ion-label>
                         
                       </ion-item>
@@ -38,11 +45,18 @@
                     </ion-item>
     
                     <ion-item>
-                        <ion-button fill="outline" slot="end">View</ion-button>
-                        <ion-button fill="outline" slot="end" (click)="bookRide(ride.id)">Book</ion-button>
+                      <ion-segment>
+                        <ion-segment-button (click)="presentAlertConfirm(ride.locations)">
+                          <ion-label>Stops</ion-label>
+                          <ion-icon name="pin"></ion-icon>
+                        </ion-segment-button>
+                        <ion-segment-button (click)="bookRide(ride.id)">
+                          <ion-label>Book</ion-label>
+                          <ion-icon name="checkmark-circle"></ion-icon>
+                        </ion-segment-button>
+                      </ion-segment>
                     </ion-item>
-                  </ion-card>
-            
+                </ion-card>
         </ion-list>
     </ion-content>
 </ion-content>

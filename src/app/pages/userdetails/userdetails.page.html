@@ -30,6 +30,12 @@
     </ion-item>
 
     <ion-item>
+      <ion-icon slot="start" name="person"></ion-icon>
+      <ion-label position="floating">Mobile Number<ion-text color="danger">*</ion-text></ion-label>
+      <ion-input required type="text" [(ngModel)]="mobileNumber"></ion-input>
+    </ion-item>
+
+    <ion-item>
       <ion-icon slot="start" name="briefcase"></ion-icon>
       <ion-label position="floating">Employee ID<ion-text color="danger">*</ion-text></ion-label>
       <ion-input required type="text" [(ngModel)]="employeeId"></ion-input>

@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { Ride } from '../../interfaces/ride';
 import {AlertController} from '@ionic/angular';
 import * as firebase from 'firebase/app';
+import { Router, NavigationExtras } from '@angular/router';
 
 @Component({
   selector: 'app-create',
@@ -19,7 +20,7 @@ export class CreatePage implements OnInit {
   datetimeTimestamp : firebase.firestore.Timestamp;
   //rides : Ride[];
   //rides: 
-  constructor(private rideService: RideService, public alertController: AlertController) { 
+  constructor(private rideService: RideService, public alertController: AlertController,private navCtrl : NavController, private router : Router) { 
     //this.rides = db.collection('rides').valueChanges();
     //this.rides = rideService.getRides();
     this.datetimeTimestamp = firebase.firestore.Timestamp.fromDate(new Date(this.datetime));
@@ -57,6 +58,17 @@ export class CreatePage implements OnInit {
       }]
     });
     await alert.present();
+  }
+
+  //uses new functionality in angular 7.2.2, route state, can pass data with a route as a state, link - https://www.youtube.com/watch?v=XyLcPdv1LKM
+  poolChatPage(rideId: string)
+  {
+    let navigationExtras : NavigationExtras = {
+      state:{
+        rideId
+      }
+    }
+    this.router.navigate(['/chat'], navigationExtras);  
   }
 
 }

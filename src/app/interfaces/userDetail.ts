@@ -6,6 +6,7 @@ export interface UserDetail {
     userId?: string;
     firstName?: string;
     lastName?: string;
+    mobileNumber?: string;
     empoyeeId?: string;
     carOwner?:boolean;
     startPoint?: string;

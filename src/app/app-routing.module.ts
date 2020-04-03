@@ -12,7 +12,8 @@ const routes: Routes = [
   { path: 'createpool', loadChildren: './pages/create/createpool/createpool.module#CreatepoolPageModule' },
   { path: 'createbooking', loadChildren: './pages/book/createbooking/createbooking.module#CreatebookingPageModule' },
   { path: 'userdetails', loadChildren: './pages/userdetails/userdetails.module#UserdetailsPageModule' },
-  { path: 'profile', loadChildren: './pages/profile/profile.module#ProfilePageModule' }
+  { path: 'profile', loadChildren: './pages/profile/profile.module#ProfilePageModule' },
+  { path: 'chat', loadChildren: './pages/chat/chat.module#ChatPageModule' }
   
 ];
 @NgModule({

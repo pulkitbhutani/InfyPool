@@ -12,6 +12,7 @@
 
       <ion-button (click) = "listToOffice()">To office</ion-button>
       <ion-button (click) = "listFromOffice()">From Office</ion-button>
+      
         <ion-list *ngFor="let booking of bookings | async">
             
                 <ion-card>
@@ -26,7 +27,7 @@
                       
                     </ion-item>
                     <ion-item>
-                        <ion-icon name="calendar" slot="start"></ion-icon>
+                        <ion-icon name="clock" slot="start"></ion-icon>
                         <ion-label>{{ booking.poolDateTime.seconds * 1000 | date:'shortTime' }}</ion-label>
                         
                       </ion-item>
@@ -36,12 +37,26 @@
                     </ion-item>
     
                     <ion-item *ngIf="booking.poolDateTime<datetimeTimestamp; else elseBlock">
-                      <ion-label >Booking Started</ion-label>
+                      <ion-segment>
+                        <ion-segment-button>
+                          <ion-label>Pool Chat</ion-label>
+                          <ion-icon name="chatbubbles"></ion-icon>
+                        </ion-segment-button> 
+                        <ion-label >Booking Started</ion-label>
+                      </ion-segment>
                     </ion-item>
                     <ng-template #elseBlock>
                       <ion-item>
-                         <ion-label>Chat icon</ion-label>
-                         <ion-button fill="outline" slot="end" (click)="cancelBooking(booking.id, booking.rideId, booking.seats)">Cancel</ion-button>
+                        <ion-segment>
+                          <ion-segment-button (click)="poolChatPage(booking.rideId)">
+                            <ion-label>Pool Chat</ion-label>
+                            <ion-icon name="chatbubbles"></ion-icon>
+                          </ion-segment-button>
+                          <ion-segment-button (click)="cancelBooking(booking.id, booking.rideId, booking.seats)">
+                            <ion-label>Cancel</ion-label>
+                            <ion-icon name="close"></ion-icon>
+                          </ion-segment-button>
+                        </ion-segment>
                        </ion-item>
                      </ng-template>
                       
@@ -49,5 +64,6 @@
                   </ion-card>
             
         </ion-list>
+      
     </ion-content>
 </ion-content>

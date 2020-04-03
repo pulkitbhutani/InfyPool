@@ -2,8 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import {RideService} from '../../../services/ride.service';
+import {UserService} from '../../../services/user.service';
 import {Ride} from '../../../interfaces/ride';
-import {  NavController, NavParams } from '@ionic/angular';
+import {UserDetail} from '../../../interfaces/userDetail';
+import {NavController, NavParams } from '@ionic/angular';
 import {AlertController} from '@ionic/angular';
 //import {firebase} from '@angular/fire/firebase-node';
 import * as firebase from 'firebase/app';
@@ -31,12 +33,14 @@ export class CreatepoolPage implements OnInit {
   minDate : string;
   isValid : boolean;
   curDateTime = new Date();
+
+  
   //minDate = new Date().toISOString();
   //maxDate = new Date();
   //let firestamp = new ;
   
 
-  constructor(db: AngularFirestore, private rideService: RideService,public alertController: AlertController, private navCtrl : NavController ) { 
+  constructor(db: AngularFirestore, private rideService: RideService,public alertController: AlertController, private navCtrl : NavController, private userService : UserService ) { 
     this.points = db.collection('pickupdroppoints').valueChanges();
     this.ride = {};
     
@@ -47,6 +51,12 @@ export class CreatepoolPage implements OnInit {
   ngOnInit() {
     this.curDate.setHours(0,0,0,0);
     this.minDate = this.curDate.toISOString();
+
+    //ride to be selected as to office by default.
+    this.toOffice = true;
+    this.destination = 'Infosys Jaipur';
+    //this.buttonColor = 'success';
+    this.backgroundColor = 'success';
     console.log(this.minDate);
   }
 
@@ -107,7 +117,7 @@ export class CreatepoolPage implements OnInit {
     this.toOffice = true;
     this.destination = 'Infosys Jaipur';
     //this.buttonColor = 'success';
-    this.backgroundColor = 'success'
+    this.backgroundColor = 'success';
     console.log(this.datetime);
     //console.log(this.datetimetest);
     console.log(this.toOffice);
@@ -129,7 +139,12 @@ export class CreatepoolPage implements OnInit {
   clickFromOffice()
   {
     this.toOffice = false;
-    console.log(this.toOffice);
+    this.userService.getCurrentUserStartPoint().subscribe((res: UserDetail[]) => {
+    this.destination = res[0].startPoint;
+    console.log(this.destination);
+    });
+
+    console.log(this.destination);
   }
 
 }

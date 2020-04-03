@@ -18,6 +18,7 @@ export class UserdetailsPage implements OnInit {
   carOwner: boolean = false;
   firstName : string;
   lastName: string;
+  mobileNumber: string;
   employeeId: string;
   officeCampus : string;
   usualStartPoint: string;
@@ -58,6 +59,7 @@ export class UserdetailsPage implements OnInit {
     //user info which is to be updated.
     this.userInfo.firstName = this.firstName;
     this.userInfo.lastName = this.lastName;
+    this.userInfo.mobileNumber = this.mobileNumber;
     this.userInfo.empoyeeId = this.employeeId;
     this.userInfo.carOwner = this.carOwner;
     this.userInfo.officeCampus = this.officeCampus;
