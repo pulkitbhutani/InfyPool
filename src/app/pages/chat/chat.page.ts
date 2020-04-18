@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {  NavController, NavParams, IonContent } from '@ionic/angular';
 import { PoolChatMessage } from '../../interfaces/poolChatMessage';
+import { UserDetail } from '../../interfaces/userDetail';
 import { ActivatedRoute } from '@angular/router';
 import { Router, NavigationExtras } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/auth';
@@ -22,8 +23,9 @@ export class ChatPage implements OnInit {
   createdAt = new Date();
   chatMessage : PoolChatMessage;
   poolchatMessages : PoolChatMessage[];
+  userName : string;
 
-  @ViewChild(IonContent) content : IonContent
+  @ViewChild(IonContent ,{static: false}) content : IonContent
 
   constructor(private route: ActivatedRoute, private router : Router,private afs : AngularFirestore, private afAuth :AngularFireAuth) {
     this.chatMessage = {};
@@ -36,13 +38,20 @@ export class ChatPage implements OnInit {
 
   ngOnInit() {
     this.loadMessages();
+
+    this.afs.collection('users',ref => ref.where('userId' ,'==', this.userId)).valueChanges()
+    .subscribe((data: UserDetail[]) =>{
+      this.userName = data[0].firstName;
+  });
   }
 
   loadMessages()
   {
     this.afs.collection('poolchat',ref => ref.where('rideId' ,'==', this.rideId).orderBy('createdAt')).valueChanges().subscribe((messages: PoolChatMessage[]) =>{
       this.poolchatMessages = messages;
-    });
+  });
+
+    
   //to be worked on and made effecient, try using then so scoll happens after data load.  
     setTimeout(()=>{
       this.content.scrollToBottom(10);
@@ -54,6 +63,7 @@ export class ChatPage implements OnInit {
    this.chatMessage.message = this.message;
    this.chatMessage.rideId = this.rideId;
    this.chatMessage.userId = this.userId;
+   this.chatMessage.userName = this.userName;
    
    this.afs.collection<PoolChatMessage>('poolchat').add(this.chatMessage);
    this.loadMessages();

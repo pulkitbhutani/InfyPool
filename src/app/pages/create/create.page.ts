@@ -34,6 +34,7 @@ export class CreatePage implements OnInit {
   getRideByUser()
   {
     this.rides = this.rideService.getRidesByUser();
+    console.log(this.rides);
   }
 
   async cancelPool(rideId: string)

@@ -17,6 +17,7 @@ export class UserService {
 
     userId : string;
     id: string;
+    userName : string;
     private usercollection = this.afs.collection<UserDetail>('users');
 
     constructor(private afs: AngularFirestore, private afAuth: AngularFireAuth) {
@@ -24,6 +25,11 @@ export class UserService {
     
     ngOnInit(){
       
+    }
+
+    getUserName(userIdUid : string){
+      
+      return this.afs.collection('users',ref => ref.where('userId' ,'==', userIdUid)).valueChanges();
     }
 
     addUserDetails(user : UserDetail)

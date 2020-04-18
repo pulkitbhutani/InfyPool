@@ -3,24 +3,24 @@
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title>chat</ion-title>
+    <ion-title>Pool Group Chat</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content class="ion-padding">
   <ion-grid>
     <ion-row *ngFor="let message of poolchatMessages">
       <ion-col size="9" *ngIf="userId !== message.userId" class="message other-message">
-        <b>{{message.userId}}</b><br>
+        <b>{{message.userName}}</b><br>
         <span>{{message.message}}</span>
-        <div class="time" text-right><br>
-        {{ message.createdAt | date:'short' }}</div>
+        <div class="time ion-text-right"><br>
+        {{ message.createdAt.seconds * 1000 | date:'short' }}</div>
       </ion-col>
 
       <ion-col offset="3" size="9" *ngIf="userId === message.userId" class="message my-message">
-        <b>{{message.userId}}</b><br>
+        <b>{{message.userName}}</b><br>
         <span>{{message.message}}</span>
-        <div class="time" text-right><br>
+        <div class="time ion-text-right"><br>
         {{ message.createdAt.seconds * 1000 | date:'short' }}</div>
       </ion-col>
     </ion-row>
@@ -30,12 +30,12 @@
 
 <ion-footer>
   <ion-toolbar color = "light">
-    <ion-row align-items-center no-padding>
+    <ion-row class="ion-align-items-center ion-no-padding">
       <ion-col size="10">
         <textarea [(ngModel)]="message" maxRows="4" class="message-input"></textarea>
       </ion-col>
       <ion-col size="2">
-        <ion-button expand = "block" fill="clear" color = "primary" [disabled]="message === ''" class="msg-btn" (click)="sendMessage()">
+        <ion-button expand = "block" fill="clear" color = "primary" [disabled]="message ===''" class="msg-btn" (click)="sendMessage()">
           <ion-icon name= "send" slot="icon-only"></ion-icon>
         </ion-button>
       </ion-col>

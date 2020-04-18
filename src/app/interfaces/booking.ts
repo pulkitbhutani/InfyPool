@@ -7,6 +7,6 @@ export interface Booking {
     pickupDropPoint?: string;
     rideId?: string;
     userId?: string;
-    poolDateTime?: firebase.firestore.Timestamp;
+    poolDateTime?: firebase.firestore.Timestamp; //should come directly from ride table, as changes will not reflect.
     createdAt?: firebase.firestore.Timestamp;
 }

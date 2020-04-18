@@ -95,10 +95,9 @@ ngOnInit(){
   cancelBooking(bookingId: string, rideId :string, seatsBooked : number)
   {
     this.saveCurrentRideIdAndDateTime(rideId);
-
     //update seats for the booking
     this.afs.collection('rides').doc(rideId).update({
-      seats : this.seatsLeft + seatsBooked
+      seats : parseInt(this.seatsLeft.toString()) + parseInt(seatsBooked.toString())
     });
 
     //delete booking

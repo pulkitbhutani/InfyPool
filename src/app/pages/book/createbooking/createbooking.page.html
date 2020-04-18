@@ -10,8 +10,8 @@
 <ion-content>
   <ion-list>
     <ion-item>
-      <ion-label *ngIf="toOffice; else elseBlock">Pickup Points</ion-label>
-      <ng-template #elseBlock><ion-label>Drop Points</ion-label></ng-template>
+      <ion-label *ngIf="toOffice; else elseBlock">Pickup Point</ion-label>
+      <ng-template #elseBlock><ion-label>Drop Point</ion-label></ng-template>
       <ion-select multiple="false" cancelText="Nah" okText="Okay!" [(ngModel)]="pickupDropPoint">
         <ion-select-option *ngFor="let location of locations">{{location}}</ion-select-option>
       </ion-select>

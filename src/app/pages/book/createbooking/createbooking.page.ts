@@ -38,6 +38,7 @@ export class CreatebookingPage implements OnInit {
       this.bookService.getRideData().subscribe((res: Ride) =>{
         this.locations = res.locations;
         this.seatsLeft = res.seats;
+        this.toOffice = res.toOffice;
         console.log(this.locations);
       });
       

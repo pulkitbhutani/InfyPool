@@ -4,7 +4,9 @@ import { Booking } from '../../interfaces/booking';
 import { Observable } from 'rxjs';
 import {AlertController} from '@ionic/angular';
 import {  NavController, NavParams } from '@ionic/angular';
+import { Router, NavigationExtras } from '@angular/router';
 import * as firebase from 'firebase/app';
+
 
 @Component({
   selector: 'app-booked',
@@ -19,7 +21,7 @@ export class BookedPage implements OnInit {
   datetimeTimestamp : firebase.firestore.Timestamp;
   bookingLabel : string;
 
-  constructor(private bookService : BookService, public alertController: AlertController,private navCtrl : NavController) { }
+  constructor(private bookService : BookService, public alertController: AlertController,private navCtrl : NavController,private router : Router) { }
 
   ngOnInit() {
     //this.getUserBookings();
@@ -54,9 +56,24 @@ export class BookedPage implements OnInit {
     await alert.present();
   } 
 
-  poolChatPage()
+  poolChatPage(rideId: string)
   {
-    this.navCtrl.navigateForward('/chat');
+    let navigationExtras : NavigationExtras = {
+      state:{
+        rideId
+      }
+    }
+    this.router.navigate(['/chat'], navigationExtras); 
+  }
+
+  poolDetailPage(rideId: string)
+  {
+    let navigationExtras : NavigationExtras = {
+      state:{
+        rideId
+      }
+    }
+    this.router.navigate(['/pooldetail'], navigationExtras); 
   }
 
   

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import {Router} from '@angular/router';
 import {Ride} from '../../interfaces/ride';
 import { map } from 'rxjs/operators';
@@ -16,16 +16,24 @@ import {AlertController} from '@ionic/angular';
 export class BookPage implements OnInit {
   
   rides: Observable<any[]>;
-  toOffice: boolean;
+  //rides: Ride[];
+  toOffice: boolean = true;
+  //ridea: Subscription;
  
   constructor(db: AngularFirestore,public alertController: AlertController, private router: Router, private bookService: BookService , private rideService: RideService) { 
 
   }
 
   ngOnInit() {
-    this.rides = this.rideService.getRides(true);
+     this.rides = this.rideService.getRides(true);
 
-    console.log(this.rides);
+     //console.log('in page ts - after service call');
+     //console.log(this.ride);
+    //this.rides.subscribe((data:Ride[]) => {
+     // this.ride = data
+      //console.log(this.ride);
+    //});
+    //console.log(this.rides);
   }
 
   bookRide(rideId : string) {
@@ -36,7 +44,7 @@ export class BookPage implements OnInit {
   }
 
   listToOffice()
-  {
+  { 
     this.toOffice = true;
     this.rides = this.rideService.getRides(this.toOffice);
   }
@@ -49,7 +57,7 @@ export class BookPage implements OnInit {
 
   doRefresh(event) {
     console.log('Begin async operation');
-    this.rides = this.rideService.getRides(true);
+    this.rides = this.rideService.getRides(this.toOffice);
     setTimeout(() => {
       console.log('Async operation has ended');
       event.target.complete();

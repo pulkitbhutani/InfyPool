@@ -10,6 +10,7 @@ export interface Ride {
     createdAt?: firebase.firestore.Timestamp;
     locations?: string[];
     price?: number;
+    userName?: string;
     seats?: number;
     toOffice?: boolean;
     userId?: string;
