@@ -14,7 +14,10 @@ const routes: Routes = [
   { path: 'userdetails', loadChildren: './pages/userdetails/userdetails.module#UserdetailsPageModule' },
   { path: 'profile', loadChildren: './pages/profile/profile.module#ProfilePageModule' },
   { path: 'chat', loadChildren: './pages/chat/chat.module#ChatPageModule' },
-  { path: 'pooldetail', loadChildren: './pages/pooldetail/pooldetail.module#PooldetailPageModule' }
+  { path: 'pooldetail', loadChildren: './pages/pooldetail/pooldetail.module#PooldetailPageModule' },  { path: 'riders', loadChildren: './pages/create/riders/riders.module#RidersPageModule' }
+
+
+
   
 ];
 @NgModule({

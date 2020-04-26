@@ -48,8 +48,12 @@
                 <ion-item *ngIf="ride.datetime<datetimeTimestamp; else elseBlock">
                   <ion-segment>
                     <ion-segment-button (click)="poolChatPage(ride.id)">
-                      <ion-label>Pool Chat</ion-label>
+                      <ion-label>Chat</ion-label>
                       <ion-icon name="chatbubbles"></ion-icon>
+                    </ion-segment-button>
+                    <ion-segment-button (click)="ridersPage(ride.id)">
+                      <ion-label>Riders</ion-label>
+                      <ion-icon name="list"></ion-icon>
                     </ion-segment-button>
                   </ion-segment>
                 </ion-item>
@@ -59,6 +63,10 @@
                       <ion-segment-button (click)="poolChatPage(ride.id)">
                         <ion-label>Chat</ion-label>
                         <ion-icon name="chatbubbles"></ion-icon>
+                      </ion-segment-button>
+                      <ion-segment-button (click)="ridersPage(ride.id)">
+                        <ion-label>Riders</ion-label>
+                        <ion-icon name="list"></ion-icon>
                       </ion-segment-button>
                       <ion-segment-button checked>
                         <ion-label>Edit</ion-label>

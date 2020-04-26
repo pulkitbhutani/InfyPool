@@ -16,8 +16,9 @@ import {AlertController} from '@ionic/angular';
 export class BookPage implements OnInit {
   
   rides: Observable<any[]>;
-  //rides: Ride[];
+  //rides: any[];
   toOffice: boolean = true;
+  ifEmpty : boolean = true;
   //ridea: Subscription;
  
   constructor(db: AngularFirestore,public alertController: AlertController, private router: Router, private bookService: BookService , private rideService: RideService) { 
@@ -26,7 +27,8 @@ export class BookPage implements OnInit {
 
   ngOnInit() {
      this.rides = this.rideService.getRides(true);
-
+      this.checkIfEmpty(this.rides);
+    console.log(this.rides);
      //console.log('in page ts - after service call');
      //console.log(this.ride);
     //this.rides.subscribe((data:Ride[]) => {
@@ -34,6 +36,19 @@ export class BookPage implements OnInit {
       //console.log(this.ride);
     //});
     //console.log(this.rides);
+  }
+
+  checkIfEmpty(data :Observable<any[]>)
+  {
+    data.subscribe((x:any[]) => {
+      if(x.length == 0)
+      {
+        this.ifEmpty = true;
+      }
+      else{
+        this.ifEmpty = false;
+      }
+    })
   }
 
   bookRide(rideId : string) {
@@ -47,12 +62,14 @@ export class BookPage implements OnInit {
   { 
     this.toOffice = true;
     this.rides = this.rideService.getRides(this.toOffice);
+    this.checkIfEmpty(this.rides);
   }
 
   listFromOffice()
   {
     this.toOffice = false;
-    this.rides = this.rideService.getRides(this.toOffice)
+    this.rides = this.rideService.getRides(this.toOffice);
+    this.checkIfEmpty(this.rides);
   }
 
   doRefresh(event) {

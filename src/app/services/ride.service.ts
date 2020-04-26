@@ -10,6 +10,7 @@ import * as firebase from 'firebase/app';
 import {UserService} from '../services/user.service';
 
 import { resolve } from 'url';
+import { element } from 'protractor';
 
 
 @Injectable({
@@ -26,8 +27,8 @@ export class RideService {
   datetimeTimestamp : firebase.firestore.Timestamp;
   chatRoom : ChatRoom;
   rides: Observable<any[]>;
-  ridesArr:Ride[];
-  ridesArrNew:Ride[];
+  ridesArr:Ride[]= [];
+  ridesArrNew:any[] = [];
 
   constructor(private afs: AngularFirestore, private afAuth: AngularFireAuth, private userService : UserService) {
     this.userId =  this.afAuth.auth.currentUser.uid;
@@ -54,21 +55,20 @@ ngOnInit(){
       })));
 
 
-      //of(ridesObservable).pipe(tap(data =>this.getUserName(data))
-      // ridesObservable.subscribe((data : Ride[])=> {
-      //   this.ridesArr = data;
-      //   this.ridesArrNew = [];
-      //    this.ridesArr.forEach(element => {
-      //     this.getUserName(element).subscribe(data => {
-            
-      //       this.ridesArrNew.push(data);
-      //       //console.log(this.ridesArrNew);
-      //     } );
-      //   });
-      // })
-      //console.log('service- Outside subscribe');
-      //console.log(ridesObservable);
+      /* ridesObservable.subscribe((data : Ride[])=>{
+        this.ridesArr = data;
+        this.ridesArrNew = [];
+        this.ridesArr.forEach(element =>{
+          this.afs.collection('users',ref => ref.where('userId' ,'==', element.userId)).valueChanges().subscribe((userData: UserDetail[]) =>{
+            const obj = {...element, ...userData[0]}
+            this.ridesArrNew.push(obj);
+            //console.log(this.Users);
+          });
+        });
+      }
+      ) */
       return ridesObservable;
+      //return ridesObservable;
       
       
       //var finalRideObservable = ridesObservable.pipe(mergeMap(x => forkJoin((b:Ride) => this.getUserName(b))));  
@@ -88,19 +88,6 @@ ngOnInit(){
 
       //})));
 
-  }
-
-  getUserName(id : Ride){
-     
-    return this.afs.collection('users',ref1 => ref1.where('userId' ,'==', id.userId)).valueChanges().pipe(
-      map((res:UserDetail[]) => {
-        id.userName = res[0].firstName;
-        //console.log(id);
-        return id;
-      })
-    );
-    
-    
   }
 
   getRidesByUser(){

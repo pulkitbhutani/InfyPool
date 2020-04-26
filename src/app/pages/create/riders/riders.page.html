@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Riders Booked for Pool</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list *ngFor="let User of Users">
+    <ion-card>
+        <ion-item>
+          <ion-icon name="person" slot="start"></ion-icon>
+          <ion-label>{{User.firstName}} {{User.lastName}}</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-icon name="pin" slot="start"></ion-icon>
+          <ion-label>{{User.pickupDropPoint}}</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-icon name="contacts" slot="start"></ion-icon>
+          <ion-label>{{User.seats}}</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-segment>
+            <ion-segment-button (click)="callProvider()">
+              <ion-label>call</ion-label>
+              <ion-icon name="call"></ion-icon>
+            </ion-segment-button>
+          </ion-segment>
+        </ion-item>
+      </ion-card>
+
+</ion-list>
+</ion-content>

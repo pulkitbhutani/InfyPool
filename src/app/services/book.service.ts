@@ -77,6 +77,8 @@ ngOnInit(){
         return { id, ...data };
       }))
     );
+
+    
   }
 
  addBooking(booking: Booking){

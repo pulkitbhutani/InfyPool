@@ -72,4 +72,14 @@ export class CreatePage implements OnInit {
     this.router.navigate(['/chat'], navigationExtras);  
   }
 
+  ridersPage(rideId: string)
+  {
+    let navigationExtras : NavigationExtras = {
+      state:{
+        rideId
+      }
+    }
+    this.router.navigate(['/riders'], navigationExtras);  
+  }
+
 }
