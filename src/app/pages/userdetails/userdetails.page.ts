@@ -88,7 +88,7 @@ export class UserdetailsPage implements OnInit {
       buttons: [{
         text :'OK',
       handler: () => {
-        this.navCtrl.navigateForward('/tabs/book');
+        this.navCtrl.navigateForward('/rides/tabs/book');
       }
       }]
       

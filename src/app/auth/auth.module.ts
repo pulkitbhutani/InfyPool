@@ -4,13 +4,14 @@ import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
-import {BookedPageRoutingModule} from './booked-routing.module';
-import { BookedPage } from './booked.page';
+import {AuthRoutingModule} from './auth-routing.module'
+
+import { AuthPage } from './auth.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: BookedPage
+    component: AuthPage
   }
 ];
 
@@ -20,8 +21,8 @@ const routes: Routes = [
     FormsModule,
     IonicModule,
     RouterModule.forChild(routes),
-    BookedPageRoutingModule
+    AuthRoutingModule
   ],
-  declarations: [BookedPage]
+  declarations: [AuthPage]
 })
-export class BookedPageModule {}
+export class AuthPageModule {}

@@ -4,13 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
-import {BookedPageRoutingModule} from './booked-routing.module';
-import { BookedPage } from './booked.page';
+import {PoolDetailPageRoutingModule} from './pooldetail-routing.module';
+import { PooldetailPage } from './pooldetail.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: BookedPage
+    component: PooldetailPage
   }
 ];
 
@@ -20,8 +20,8 @@ const routes: Routes = [
     FormsModule,
     IonicModule,
     RouterModule.forChild(routes),
-    BookedPageRoutingModule
+    PoolDetailPageRoutingModule
   ],
-  declarations: [BookedPage]
+  declarations: [PooldetailPage]
 })
-export class BookedPageModule {}
+export class PooldetailPageModule {}

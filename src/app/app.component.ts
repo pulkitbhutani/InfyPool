@@ -54,7 +54,11 @@ export class AppComponent {
       setTimeout(() => {
         this.loggedIn = true;
       }, 300);
-      this.router.navigate(['/tabs/create']);
+      this.router.navigate(['/rides/tabs/create']);
+    }
+    else
+    {
+      this.router.navigate(['/auth'])
     }
   }
 

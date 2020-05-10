@@ -48,15 +48,15 @@ ngOnInit(){
   {
     this.rideId = rideID;
     this.rideService.getRideInfo(this.rideId).subscribe((res: Ride) =>{
-      this.poolDateTime = res.datetime;
-      this.seatsLeft = res.seats;
+    this.poolDateTime = res.datetime;
+    this.seatsLeft = res.seats;
     });
   }
 
   //returns ride data for the currently selected ride.
-  getRideData()
+  getRideData(rideId: string)
   {
-    return this.afs.collection("rides").doc(this.rideId).valueChanges();
+    return this.afs.collection("rides").doc(rideId).valueChanges();
   }
 
   getToFromOffice()
@@ -66,6 +66,7 @@ ngOnInit(){
 
   //future changes to be done - minus 10 minutes nano seconds so booking is visibe 10 minutes after the start of ride.
   getUserBookings(){
+
     //return this.rideCollection.snapshotChanges();
     //return this.afs.collection('rides', ref=> ref.where('toOffice','==', true).orderBy('createdAt')).snapshotChanges();
     //always use snapshotchanges when you want metadata as well with the collection data, it helps with much complex data.
@@ -78,20 +79,40 @@ ngOnInit(){
       }))
     );
 
+    //work on this later- for having pooldatetime at just one place, right now it needs to be updated in both rides ad booking tables.
+    /* this.afs.collection('bookings',ref => ref.where('userId' ,'==', this.userId)).valueChanges().subscribe((data: Booking[]) =>{
+      data.forEach(element => {
+        this.afs.collection('rides',ref => ref.where('rideId' ,'==', element.rideId).where('poolDateTime','>=',this.datetimeTimestamp))
+        .valueChanges().subscribe((rideData: Ride[]) =>{
+          if(rideData)
+          {
+            const obj = {...element, ...rideData[0]}
+            this.bookings1.push(obj);
+          }
+          //console.log(this.Users);
+        });
+      });
+
+  }); */
+    
     
   }
 
  addBooking(booking: Booking){
-    booking.rideId = this.rideId;
     booking.userId = this.userId;
-
+  
     //update the number of seats left
-    booking.poolDateTime = this.poolDateTime;
-    this.afs.collection('rides').doc(this.rideId).update({
-      seats : this.seatsLeft - booking.seats
+    //booking.poolDateTime = this.poolDateTime;
+    
+    return this.bookingCollection.add(booking);
+  }
+
+  updateSeats(seatsL : number, seatsB : number, rideId : string)
+  {
+    this.afs.collection('rides').doc(rideId).update({
+      seats : seatsL - seatsB
     });
 
-    return this.bookingCollection.add(booking);
   }
 
   cancelBooking(bookingId: string, rideId :string, seatsBooked : number)

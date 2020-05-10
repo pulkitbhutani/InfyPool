@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
 import { TabsPage } from './tabs.page';
-import {TabsRoutingModule} from './tabs.router.module';
+import {TabsRoutingModule} from './tabs-routing.module';
 
 
 

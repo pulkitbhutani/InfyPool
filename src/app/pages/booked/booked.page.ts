@@ -5,6 +5,9 @@ import { Observable } from 'rxjs';
 import {AlertController} from '@ionic/angular';
 import {  NavController, NavParams } from '@ionic/angular';
 import { Router, NavigationExtras } from '@angular/router';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFireAuth } from '@angular/fire/auth';
+import {Ride} from '../../interfaces/ride';
 import * as firebase from 'firebase/app';
 
 
@@ -21,7 +24,9 @@ export class BookedPage implements OnInit {
   datetimeTimestamp : firebase.firestore.Timestamp;
   bookingLabel : string;
 
-  constructor(private bookService : BookService, public alertController: AlertController,private navCtrl : NavController,private router : Router) { }
+  constructor(private afs: AngularFirestore,private afAuth: AngularFireAuth,private bookService : BookService, public alertController: AlertController,private navCtrl : NavController,private router : Router) {
+
+  }
 
   ngOnInit() {
     //this.getUserBookings();
@@ -30,7 +35,12 @@ export class BookedPage implements OnInit {
     //console.log(data);
     //});
     this.bookings = this.bookService.getUserBookings();
+
+    
+
     this.datetimeTimestamp = firebase.firestore.Timestamp.fromDate(new Date(this.datetime));
+
+    
   }
 
   async cancelBooking(bookingId : string, rideId: string, bookedSeats : number)
