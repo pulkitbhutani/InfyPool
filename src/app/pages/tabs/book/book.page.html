@@ -9,16 +9,10 @@
 
 <ion-content>
     <ion-content>
-      <ion-row>
-        <ion-col style="text-align: right">
-          <ion-button (click) = "listToOffice()" *ngIf= "!toOffice">to office</ion-button>
-          <ion-button (click) = "listToOffice()" *ngIf= "toOffice" color="success">to office</ion-button>
-        </ion-col>
-        <ion-col style="text-align: left">
-          <ion-button (click) = "listFromOffice()" *ngIf= "toOffice">to home</ion-button>
-          <ion-button (click) = "listFromOffice()" *ngIf= "!toOffice" color="success">to home</ion-button>
-        </ion-col>
-      </ion-row>
+      <ion-segment value="toOffice" (ionChange)="onFilterUpdate($event)" value='toOffice'> 
+        <ion-segment-button value='toOffice'>To Office</ion-segment-button>
+        <ion-segment-button value='toHome'>To Home</ion-segment-button>
+      </ion-segment>
       <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
         <ion-refresher-content 
           pullingIcon="arrow-dropdown"
@@ -28,8 +22,9 @@
         </ion-refresher-content>
       </ion-refresher>
       <div *ngIf = "!ifEmpty">
-        <ion-list  *ngFor="let ride of rides | async" >
-                <ion-card>
+        <ion-virtual-scroll [items]="rides | async" approxItemHeight= "235px">
+        <!-- <ion-list  *ngFor="let ride of rides | async" > -->
+                <ion-card *virtualItem="let ride">
                   <ion-card-header>
                     <ion-row>
                       <!-- <ion-col size="4">
@@ -65,7 +60,8 @@
                       </ion-segment>
                     </ion-item>
                 </ion-card>
-        </ion-list>
+        <!-- </ion-list> -->
+      </ion-virtual-scroll>
       </div>
       <ion-label color = "medium" position="floating" mode ="md" class= "plain-text" *ngIf= "ifEmpty" text-center>No rides available to Book.</ion-label>
     </ion-content>

@@ -7,6 +7,7 @@ import { map } from 'rxjs/operators';
 import {BookService} from '../../../services/book.service';
 import {RideService} from '../../../services/ride.service';
 import {AlertController} from '@ionic/angular';
+import {SegmentChangeEventDetail} from '@ionic/core';
 
 @Component({
   selector: 'app-book',
@@ -51,19 +52,22 @@ export class BookPage implements OnInit {
     })
   }
 
-  listToOffice()
-  { 
-    this.toOffice = true;
-    this.rides = this.rideService.getRides(this.toOffice);
+  onFilterUpdate(event : CustomEvent<SegmentChangeEventDetail>){
+    if(event.detail.value == 'toOffice')
+    {
+      this.listRides(true);
+    }
+    else if(event.detail.value == 'toHome')
+    {
+      this.listRides(false);
+    }
+  }
+
+  listRides(bool: boolean){
+    this.rides = this.rideService.getRides(bool);
     this.checkIfEmpty(this.rides);
   }
 
-  listFromOffice()
-  {
-    this.toOffice = false;
-    this.rides = this.rideService.getRides(this.toOffice);
-    this.checkIfEmpty(this.rides);
-  }
 
   doRefresh(event) {
     console.log('Begin async operation');
