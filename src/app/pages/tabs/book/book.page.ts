@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable, Subscription } from 'rxjs';
 import {Router} from '@angular/router';
 import {Ride} from '../../../interfaces/ride';
-import { map } from 'rxjs/operators';
 import {BookService} from '../../../services/book.service';
 import {RideService} from '../../../services/ride.service';
 import {AlertController} from '@ionic/angular';
@@ -14,69 +13,44 @@ import {SegmentChangeEventDetail} from '@ionic/core';
   templateUrl: './book.page.html',
   styleUrls: ['./book.page.scss'],
 })
-export class BookPage implements OnInit {
+export class BookPage implements OnInit, OnDestroy {
   
-  rides: Observable<any[]>;
-  //rides: any[];
   toOffice: boolean = true;
   ifEmpty : boolean = true;
-  //ridea: Subscription;
+  rides: Ride[];
+  relevantRides : Ride[];
+  private ridesSub: Subscription;
  
   constructor(db: AngularFirestore,public alertController: AlertController, private router: Router, private bookService: BookService , private rideService: RideService) { 
 
   }
 
+
   ngOnInit() {
-     this.rides = this.rideService.getRides(true);
-      this.checkIfEmpty(this.rides);
-    console.log(this.rides);
-     //console.log('in page ts - after service call');
-     //console.log(this.ride);
-    //this.rides.subscribe((data:Ride[]) => {
-     // this.ride = data
-      //console.log(this.ride);
-    //});
-    //console.log(this.rides);
+    this.ridesSub = this.rideService.rides.subscribe(rides => {
+      this.rides = rides;
+      this.relevantRides = this.rides.filter(ride => ride.toOffice == this.toOffice).filter(ride => ride.seats != 0);
+    });
   }
 
-  checkIfEmpty(data :Observable<any[]>)
-  {
-    data.subscribe((x:any[]) => {
-      if(x.length == 0)
-      {
-        this.ifEmpty = true;
-      }
-      else{
-        this.ifEmpty = false;
-      }
-    })
+  ionViewWillEnter(){
+    this.rideService.getRides().subscribe();
   }
 
   onFilterUpdate(event : CustomEvent<SegmentChangeEventDetail>){
     if(event.detail.value == 'toOffice')
     {
-      this.listRides(true);
+      this.toOffice = true;
+      this.relevantRides = this.rides.filter(ride => ride.toOffice == this.toOffice).filter(ride => ride.seats != 0);
     }
     else if(event.detail.value == 'toHome')
     {
-      this.listRides(false);
+      this.toOffice = false;
+      this.relevantRides = this.rides.filter(ride => ride.toOffice == this.toOffice).filter(ride => ride.seats != 0);
     }
   }
 
-  listRides(bool: boolean){
-    this.rides = this.rideService.getRides(bool);
-    this.checkIfEmpty(this.rides);
-  }
 
-
-  doRefresh(event) {
-    console.log('Begin async operation');
-    this.rides = this.rideService.getRides(this.toOffice);
-    setTimeout(() => {
-      console.log('Async operation has ended');
-      event.target.complete();
-    }, 2000);
-  }
 
   async presentAlertConfirm(stops : string[]) {
     
@@ -104,6 +78,12 @@ export class BookPage implements OnInit {
     });
 
     await alert.present();
+  }
+
+  ngOnDestroy(){
+    if(this.ridesSub){
+      this.ridesSub.unsubscribe();
+    }
   }
 
 }

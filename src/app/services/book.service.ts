@@ -5,9 +5,11 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { Observable } from 'rxjs';
 import {Ride} from '../interfaces/ride';
 import {RideService} from '../services/ride.service';
+import {AuthService} from '../services/auth.service';
 import {AlertController} from '@ionic/angular';
 import * as firebase from 'firebase/app';
 import { map } from 'rxjs/operators';
+import { AuthPage } from '../auth/auth.page';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +18,6 @@ export class BookService {
   
   //private rideCollection = this.afs.collection<Ride>('rides');
 
-  userId: string;
   rideId: string;
   seatsLeft : number;
   points: Observable<any[]>;
@@ -27,8 +28,7 @@ export class BookService {
   private bookingCollection = this.afs.collection<Ride>('bookings');
   
 
-  constructor(private afs: AngularFirestore, private afAuth: AngularFireAuth, private rideService: RideService, public alertController :AlertController) {
-    this.userId =  this.afAuth.auth.currentUser.uid;
+  constructor(private afs: AngularFirestore, private afAuth: AngularFireAuth, private rideService: RideService, public alertController :AlertController, private authService : AuthService) {
     this.datetime.setHours(0,0,0,0);
     this.datetimeTimestamp = firebase.firestore.Timestamp.fromDate(new Date(this.datetime));
 }
@@ -70,7 +70,7 @@ ngOnInit(){
     //return this.rideCollection.snapshotChanges();
     //return this.afs.collection('rides', ref=> ref.where('toOffice','==', true).orderBy('createdAt')).snapshotChanges();
     //always use snapshotchanges when you want metadata as well with the collection data, it helps with much complex data.
-    return this.afs.collection('bookings',ref => ref.where('userId' ,'==', this.userId).where('poolDateTime','>=',this.datetimeTimestamp)
+    return this.afs.collection('bookings',ref => ref.where('userId' ,'==', this.authService.userId).where('poolDateTime','>=',this.datetimeTimestamp)
     .orderBy('poolDateTime','desc')).snapshotChanges().pipe(
       map(actions => actions.map(a => {
         const data = a.payload.doc.data() as Booking;
@@ -99,8 +99,7 @@ ngOnInit(){
   }
 
  addBooking(booking: Booking){
-    booking.userId = this.userId;
-  
+    booking.userId = this.authService.userId;
     //update the number of seats left
     //booking.poolDateTime = this.poolDateTime;
     
@@ -109,7 +108,7 @@ ngOnInit(){
 
   updateSeats(seatsL : number, seatsB : number, rideId : string)
   {
-    this.afs.collection('rides').doc(rideId).update({
+    return this.afs.collection('rides').doc(rideId).update({
       seats : seatsL - seatsB
     });
 

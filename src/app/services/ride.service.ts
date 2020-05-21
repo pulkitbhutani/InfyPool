@@ -3,8 +3,8 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import {Ride} from '../interfaces/ride';
 import {ChatRoom} from '../interfaces/chatRoom';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { Observable, observable,forkJoin, of, from } from 'rxjs';
-import { map,flatMap, concatMap, mergeMap, switchMap, tap } from 'rxjs/operators';
+import { Observable, observable,forkJoin, of, from , BehaviorSubject} from 'rxjs';
+import { map,flatMap, concatMap, mergeMap, switchMap, tap, take } from 'rxjs/operators';
 import { UserDetail } from '../interfaces/userDetail';
 import * as firebase from 'firebase/app';
 import {UserService} from '../services/user.service';
@@ -25,34 +25,48 @@ export class RideService {
   idss: string[];
   datetime = new Date();
   datetimeTimestamp : firebase.firestore.Timestamp;
-  chatRoom : ChatRoom;
-  rides: Observable<any[]>;
-  ridesArr:Ride[]= [];
-  ridesArrNew:any[] = [];
+  private _rides = new  BehaviorSubject<Ride[]>([])
 
   constructor(private afs: AngularFirestore, private afAuth: AngularFireAuth, private userService : UserService) {
     this.userId =  this.afAuth.auth.currentUser.uid;
     this.datetimeTimestamp = firebase.firestore.Timestamp.fromDate(new Date(this.datetime))
-    this.chatRoom = {};
 }
+
+get rides(){
+  return this._rides.asObservable();
+} 
+
 
 ngOnInit(){
   
 }
 
-  getRides(toOffice : boolean){
+  getRide(rideId : string)
+  {
+    //using take(1) as this data is needed only once, not stream is needed.
+    return this.afs.collection("rides").doc(rideId).valueChanges().pipe(take(1), map((ride: Ride)=>{
+      return ride;
+    }));
+  }
 
+  getRides(){
 
     //return this.rideCollection.snapshotChanges();
     //return this.afs.collection('rides', ref=> ref.where('toOffice','==', true).orderBy('createdAt')).snapshotChanges();
     //always use snapshotchanges when you want metadata as well with the collection data, it helps with much complex data.
-    var ridesObservable = this.afs.collection('rides',ref=>ref.where('toOffice','==', toOffice).where('datetime','>=',this.datetimeTimestamp)
+    var ridesObservable = this.afs.collection('rides',ref=>ref.where('datetime','>=',this.datetimeTimestamp)
     .orderBy('datetime')).snapshotChanges().pipe(
-      map(actions => actions.map(a => {
+      map(actions =>   actions.map(a => {
         const data = a.payload.doc.data() as Ride;
-        const id = a.payload.doc.id;
-        return { id, ...data };
-      })));
+         data.id = a.payload.doc.id;
+        return {...data};
+      })
+   ), tap(rides=> {
+    this._rides.next(rides); 
+    
+  })
+  
+  );
 
 
       /* ridesObservable.subscribe((data : Ride[])=>{
@@ -128,17 +142,6 @@ ngOnInit(){
     //});
     //this.createChatRoom(newRide);
     return newRide;
-  }
-
-  createChatRoom(newRideId)
-  {
-    this.chatRoom.rideId = newRideId;
-    this.chatRoom.userId.push(this.afAuth.auth.currentUser.uid.toString());
-    this.chatRoom.createdAt = firebase.firestore.Timestamp.fromDate(new Date());
-    console.log(this.chatRoom);
-    //return this.chatRoom;
-    //this.chatRoom.rideId = rideDetail.id;
-    //this.afs.collection<ChatRoom>('chatRooms').add(this.chatRoom);
   }
 
   updateRide(id: number, ride: Ride){

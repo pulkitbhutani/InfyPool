@@ -12,8 +12,14 @@ export class AuthService {
 
   private _userIsAuthenticated= false;
 
+  private _userId = this.afAuth.auth.currentUser.uid;
+
   get userIsAuthenticated(){
     return this._userIsAuthenticated
+  }
+
+  get userId(){
+    return this._userId;
   }
 
   constructor(public afAuth: AngularFireAuth) { }

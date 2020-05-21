@@ -7,24 +7,33 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <ion-list>
-    <ion-item>
-      <ion-label *ngIf="toOffice; else elseBlock">Pickup Point</ion-label>
-      <ng-template #elseBlock><ion-label>Drop Point</ion-label></ng-template>
-      <ion-select multiple="false" cancelText="Nah" okText="Okay!" [(ngModel)]="pickupDropPoint">
-        <ion-select-option *ngFor="let location of locations">{{location}}</ion-select-option>
-      </ion-select>
-    </ion-item>
-
-    <ion-item>
-      <ion-label>Seats</ion-label>
-      <ion-select ok-text="Okay" cancel-text="Nah" [(ngModel)]="seatsBooked">
-        <ion-select-option [value]=1>1</ion-select-option>
-        <ion-select-option [value]=2>2</ion-select-option>
-      </ion-select>
-    </ion-item>
-  </ion-list>
+<ion-content class="ion-text-center padding">
+  <form #f="ngForm">
+    <ion-grid>
+      <ion-row>
+        <ion-col size-sm="6" offset-sm="3">
+          <ion-item>
+            <ion-label *ngIf="ride.toOffice; else elseBlock">Pickup Point</ion-label>
+            <ng-template #elseBlock><ion-label>Drop Point</ion-label></ng-template>
+            <ion-select multiple="false" cancelText="Nah" okText="Okay!" [(ngModel)]="pickupDropPoint" name ="points">
+              <ion-select-option *ngFor="let location of ride.locations">{{location}}</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size-sm="6" offset-sm="3">
+          <ion-item>
+            <ion-label>Seats</ion-label>
+            <ion-select ok-text="Okay" cancel-text="Nah" [(ngModel)]="seatsBooked" name="seatsB">
+              <ion-select-option [value]=1>1</ion-select-option>
+              <ion-select-option [value]=2>2</ion-select-option>
+            </ion-select>
+          </ion-item>
+          </ion-col>
+        </ion-row>
+    </ion-grid>
+  </form>
 </ion-content>
 
 <ion-footer>
