@@ -12,8 +12,17 @@
   </ion-button>
 
 <ion-content>
-
-    <ion-list *ngFor="let ride of rides | async">
+  <ion-grid  *ngIf ="!rides || rides.length<=0">
+    <ion-row>
+      <ion-col size="12" size-sm="8" offset-sm="2" class="ion-text-center">
+        <p>You are not offering any Car Pool.</p>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" class="ion-text-center" offset-sm="2" size-sm="8">
+        <ion-list *ngFor="let ride of rides">
             <ion-card>
               <ion-card-header *ngIf="ride.datetime<datetimeTimestamp;">
                 <ion-label color = "Secondary">Booking Started</ion-label>
@@ -44,8 +53,7 @@
                 <ion-icon name="compass" slot="start"></ion-icon>
                 <ion-label>To Home</ion-label>
               </ion-item>
-
-                <ion-item *ngIf="ride.datetime<datetimeTimestamp; else elseBlock">
+              <ion-item *ngIf="ride.datetime<datetimeTimestamp; else elseBlock">
                   <ion-segment>
                     <ion-segment-button (click)="poolChatPage(ride.id)">
                       <ion-label>Chat</ion-label>
@@ -79,7 +87,9 @@
                     </ion-segment>
                    </ion-item>
                  </ng-template>
-              </ion-card>
-        
-    </ion-list>
+              </ion-card>    
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
