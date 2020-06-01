@@ -1,81 +1,80 @@
-import { Component, OnInit,  EventEmitter, Output } from '@angular/core';
+import { Component, OnInit,  EventEmitter, Output, OnDestroy } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import {  NavController, NavParams } from '@ionic/angular';
 import {AlertController} from '@ionic/angular';
-import { auth } from 'firebase/app';
 import {UserService} from '../services/user.service';
-import { UserDetail } from '../interfaces/userDetail';
+import {AuthService} from '../services/auth.service';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { map } from 'rxjs/operators';
+import { NgForm } from '@angular/forms';
+import {Router} from '@angular/router';
+import { Route } from '@angular/compiler/src/core';
+import { User } from './user.model';
+import { auth } from 'firebase';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-auth',
   templateUrl: './auth.page.html',
   styleUrls: ['./auth.page.scss'],
 })
-export class AuthPage implements OnInit {
+export class AuthPage implements OnInit, OnDestroy {
 
-  username : string="";
-  password : string ="";
   userDetailId: string;
+  checkSub : Subscription;
 
   @Output() authState = new EventEmitter();
 
-  constructor(private afs: AngularFirestore,public afAuth: AngularFireAuth, public alertController: AlertController,private userService : UserService, private navCtrl : NavController) { }
+  constructor(private afs: AngularFirestore,
+    public afAuth: AngularFireAuth, 
+    public alertController: AlertController,
+    private router : Router,
+    private authService : AuthService,
+    private userService : UserService
+    ) { }
 
   
 
   ngOnInit() {
   }
 
-  async login()
+  login(form : NgForm)
   {
-    const{username,password} = this
+    this.authService.login(form.value.email,form.value.password).then(authdata => {
+      console.log(authdata);
 
-    try{
-      const user = await this.afAuth.auth.signInWithEmailAndPassword(username,password);
-      if(user)
-      {
-        console.log("sucessfully logged in");
-        window.dispatchEvent(new CustomEvent('user:login'));
-        
-        this.userService.checkDetailsExist(user.user.uid).subscribe(res=> {
-          this.userDetailId = res[0];
-          
-          if(this.userDetailId)
-          {
-            this.navCtrl.navigateForward('/rides/tabs/book');
-          }
-          else
-          {
-            this.navCtrl.navigateForward('/userdetails');
-          }
-        });
-      }
-        //console.log(data);
-        
-        //this.navCtrl.navigateForward('/tabs');
-      } 
-     catch(err){
-      console.dir(err)
-      if(err.code === "auth/user-not-found"){
-        const alert = await this.alertController.create({
-          header: 'Incorrect Credentials',
-          //subHeader: 'Incorrect Credentials',
-          message: 'Please check Username and Password.',
-          buttons: ['OK']
-        });
-        await alert.present();
-      }
-      else if(err.code ==="auth/invalid-email"){
-        const alert = await this.alertController.create({
-          header: 'Invalid Email',
-          //subHeader: 'Incorrect Credentials',
-          message: 'Please enter a correct Email Address',
-          buttons: ['OK']
-        });
-        await alert.present();
-      }
+      this.checkSub =  this.userService.checkDetailsExist(authdata.user.uid).subscribe(res=> {
+        console.log(res);
+        if(res)
+        {
+          this.router.navigate(['/rides/tabs']);
+        }
+        else
+        {
+          this.router.navigate(['/userdetails']);
+        }
+      });
+      
+    });
+    //console.log(user);
+  }
+
+  
+
+  private showAlert(message: string) {
+    this.alertController
+      .create({
+        header: 'Authentication failed',
+        message: message,
+        buttons: ['Okay']
+      })
+      .then(alertEl => alertEl.present());
+  }
+
+
+  ngOnDestroy()
+  {
+    if(this.checkSub){
+      this.checkSub.unsubscribe();
     }
   }
 

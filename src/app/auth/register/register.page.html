@@ -5,21 +5,25 @@
 </ion-header>
 
 <ion-content padding>
-  <ion-list>
-  <ion-item>
-    <ion-label position="floating">Email</ion-label>
-    <ion-input type="text" [(ngModel)]="username"></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-label position="floating">Password</ion-label>
-    <ion-input type="password" [(ngModel)]="password"></ion-input>
-  </ion-item>
-  <ion-item>
-      <ion-label position="floating">Confirm Password</ion-label>
-      <ion-input type="password" [(ngModel)]="cpassword"></ion-input>
-    </ion-item>
-</ion-list>
-<ion-button fill="solid" expand="block" color="dark" (click)="register()">Signup</ion-button>
-<ion-button fill="solid" expand="block" color="dark" routerLink="/auth">Back to Login</ion-button>
+  <form #signupForm="ngForm">
+    <ion-list>
+      <ion-item>
+        <ion-label position="floating">Email</ion-label>
+        <ion-input type="email" ngModel name="email"  spellcheck="false" autocapitalize="off" required email #emailCtrl="ngModel"></ion-input>
+      </ion-item>
+      <ion-item *ngIf="!emailCtrl.valid && emailCtrl.touched" lines="none">
+        <p>Should be valid email addresss.</p>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Password</ion-label>
+        <ion-input type="password" ngModel name="password" required #passwordCtrl="ngModel"></ion-input>
+      </ion-item>
+      <ion-item *ngIf="!passwordCtrl.valid && passwordCtrl.touched" lines="none">
+        <ion-label>Password is Required</ion-label>
+      </ion-item>
 
+    </ion-list>
+    <ion-button fill="solid" expand="block" color="dark" (click)="register(signupForm)">Signup</ion-button>
+    <ion-button fill="solid" expand="block" color="dark" routerLink="/auth">Back to Login</ion-button>
+  </form>
 </ion-content>

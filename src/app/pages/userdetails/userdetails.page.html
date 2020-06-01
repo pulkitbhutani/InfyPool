@@ -20,25 +20,37 @@
     <ion-item>
       <ion-icon slot="start" name="person"></ion-icon>
       <ion-label position="floating">First Name<ion-text color="danger">*</ion-text></ion-label>
-      <ion-input required type="text" [(ngModel)]="firstName"></ion-input>
+      <ion-input required type="text" [(ngModel)]="firstName" spellcheck="true" autocapitalize="on" required #firstNameCtrl="ngModel"></ion-input>
+    </ion-item>
+    <ion-item *ngIf="!firstNameCtrl.valid && firstNameCtrl.touched" lines="none">
+      <p>First Name is Required.</p>
     </ion-item>
 
     <ion-item>
       <ion-icon slot="start" name="person"></ion-icon>
       <ion-label position="floating">Last Name<ion-text color="danger">*</ion-text></ion-label>
-      <ion-input required type="text" [(ngModel)]="lastName"></ion-input>
+      <ion-input required type="text" [(ngModel)]="lastName" spellcheck="true" autocapitalize="on" required #lastNameCtrl="ngModel"></ion-input>
+    </ion-item>
+    <ion-item *ngIf="!lastNameCtrl.valid && lastNameCtrl.touched" lines="none">
+      <p>Last Name is Required.</p>
     </ion-item>
 
     <ion-item>
       <ion-icon slot="start" name="person"></ion-icon>
       <ion-label position="floating">Mobile Number<ion-text color="danger">*</ion-text></ion-label>
-      <ion-input required type="text" [(ngModel)]="mobileNumber"></ion-input>
+      <ion-input required type="tel" [(ngModel)]="mobileNumber" required #mobileNumberCtrl="ngModel"></ion-input>
+    </ion-item>
+    <ion-item *ngIf="!mobileNumberCtrl.valid && mobileNumberCtrl.touched" lines="none">
+      <p>Mobile Number is Required.</p>
     </ion-item>
 
     <ion-item>
       <ion-icon slot="start" name="briefcase"></ion-icon>
       <ion-label position="floating">Employee ID<ion-text color="danger">*</ion-text></ion-label>
-      <ion-input required type="text" [(ngModel)]="employeeId"></ion-input>
+      <ion-input required type="text" [(ngModel)]="employeeId" required #empIdCtrl="ngModel"></ion-input>
+    </ion-item>
+    <ion-item *ngIf="!empIdCtrl.valid && empIdCtrl.touched" lines="none">
+      <p>Employee ID is Required.</p>
     </ion-item>
 
     <ion-item>

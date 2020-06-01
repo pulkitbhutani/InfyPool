@@ -66,9 +66,9 @@ export class UserdetailsPage implements OnInit {
     this.userInfo.startPoint = this.usualStartPoint;
 
     
-    this.userService.addUserDetails(this.userInfo);
-
-    if(this.carOwner == true)
+    this.userService.addUserDetails(this.userInfo).then(res =>{
+    console.log(res);
+    if(this.carOwner == true && res!= undefined)
     {
       //vehicle details that needs to be updated
       this.vehicle.carModel = this.carModel;
@@ -80,6 +80,8 @@ export class UserdetailsPage implements OnInit {
 
       this.userService.addVehicleandRouteDetails(this.vehicle,this.routeInfo);
     }
+
+    });
 
     const alert = await this.alertController.create({
       header: 'Thanks For Sharing Your Details',

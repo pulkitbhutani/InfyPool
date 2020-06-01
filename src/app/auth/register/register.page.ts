@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import {AlertController} from '@ionic/angular';
+import {AuthService} from '../../services/auth.service';
 import { auth } from 'firebase/app';
 import {Router} from '@angular/router';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-register',
@@ -11,37 +13,44 @@ import {Router} from '@angular/router';
 })
 export class RegisterPage implements OnInit {
 
+
   username:string = "";
   password:string = "";
-  cpassword:string= "";
-  constructor(public afAuth: AngularFireAuth, public alertController: AlertController, public router: Router) { }
+
+  
+  constructor(public afAuth: AngularFireAuth, 
+    public alertController: AlertController, 
+    public router: Router,
+    private authService : AuthService) { }
 
   ngOnInit() {
   }
 
-  async register(){
-    const {username,password,cpassword} = this
-    if(password!==cpassword){
-      this.showAlert("Error!", "Passwords Don't Match");
-      return console.error("Passwords don't match");
-    }
-    try{
-      const res = await this.afAuth.auth.createUserWithEmailAndPassword(username,password);
-      console.log(res);
-      this.showAlert("Success!","Welcome Aboard!");
-      window.dispatchEvent(new CustomEvent('user:signup'));
-      this.router.navigate(['/userdetails']);
-    } catch(error) {
-        console.dir(error);
-        this.showAlert("Error!", error.message);
-      }
+  
+
+  register(form: NgForm)
+  {
+    if(form.valid)
+    {
+      this.authService.register(form.value.email, form.value.password).then(resData=>{
+        console.log(resData);
+        this.router.navigate(['/userdetails']);
+      });
+   }
   }
+
 
   async showAlert(header: string, message: string){
     const alert = await this.alertController.create({
       header,
       message,
-      buttons:['OK']
+      buttons:[{
+        text: 'Ok',
+        handler: () => {
+          this.router.navigate['/userdetails']
+        }
+      }]
+      
     });
 
     await alert.present();

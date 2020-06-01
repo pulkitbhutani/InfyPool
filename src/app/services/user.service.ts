@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
+import {AuthService} from './auth.service'
 import {UserDetail} from '../interfaces/userDetail';
 import {Vehicle} from '../interfaces/vehicle';
 import {RouteDetail} from '../interfaces/routeDetail';
@@ -20,7 +21,7 @@ export class UserService {
     userName : string;
     private usercollection = this.afs.collection<UserDetail>('users');
 
-    constructor(private afs: AngularFirestore, private afAuth: AngularFireAuth) {
+    constructor(private afs: AngularFirestore, private authService : AuthService) {
     }
     
     ngOnInit(){
@@ -34,11 +35,18 @@ export class UserService {
 
     addUserDetails(user : UserDetail)
     {
-        this.userId =  this.afAuth.auth.currentUser.uid;
-        user.userId = this.userId;
-        user.createdAt = firebase.firestore.Timestamp.fromDate(new Date());
-        user.officeCampus = 'Infosys Jaipur';
-        this.usercollection.add(user);
+        //this.usercollection.add(user);
+        return this.afs.collection('users').doc(this.authService.userId).set({
+        userId :  this.authService.userId,
+        firstName : user.firstName,
+        lastName : user.lastName,
+        mobileNumber : user.mobileNumber,
+        carOwner : user.carOwner,
+        employeeId : user.empoyeeId,
+        startPoint : user.startPoint,
+        createdAt : firebase.firestore.Timestamp.fromDate(new Date()),
+        officeCampus : 'Infosys Jaipur'
+        });
     }
 
     addVehicleandRouteDetails(vehicle: Vehicle, routeInfo: RouteDetail)
@@ -52,21 +60,19 @@ export class UserService {
         this.afs.collection<RouteDetail>('routeInfo').add(routeInfo);
     }
 
-    checkDetailsExist(user : string)
+  checkDetailsExist(user : string)
     {
-        return this.afs.collection('users', ref=> ref.where('userId','==',user)).snapshotChanges().pipe(
-            map(actions => actions.map(a => {
-              //const data = a.payload.doc.data() as UserDetail;
-              return a.payload.doc.id;
-            }))
-          );
+        console.log(user);
+        return this.usercollection.doc(user).valueChanges().pipe(take(1));
     }
 
     getCurrentUserStartPoint()
     {
-      this.userId =  this.afAuth.auth.currentUser.uid;
+      this.userId =  this.authService.userId;
 
       return this.afs.collection("users", ref=> ref.where('userId','==',this.userId)).valueChanges();
+
+
     }
 
     
