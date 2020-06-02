@@ -5,9 +5,11 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { Observable } from 'rxjs';
 import {Ride} from '../interfaces/ride';
 import {RideService} from '../services/ride.service';
+import {AuthService} from '../services/auth.service';
 import {AlertController} from '@ionic/angular';
 import * as firebase from 'firebase/app';
 import { map } from 'rxjs/operators';
+import { AuthPage } from '../auth/auth.page';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +18,6 @@ export class BookService {
   
   //private rideCollection = this.afs.collection<Ride>('rides');
 
-  userId: string;
   rideId: string;
   seatsLeft : number;
   points: Observable<any[]>;
@@ -27,8 +28,7 @@ export class BookService {
   private bookingCollection = this.afs.collection<Ride>('bookings');
   
 
-  constructor(private afs: AngularFirestore, private afAuth: AngularFireAuth, private rideService: RideService, public alertController :AlertController) {
-    this.userId =  this.afAuth.auth.currentUser.uid;
+  constructor(private afs: AngularFirestore, private afAuth: AngularFireAuth, private rideService: RideService, public alertController :AlertController, private authService : AuthService) {
     this.datetime.setHours(0,0,0,0);
     this.datetimeTimestamp = firebase.firestore.Timestamp.fromDate(new Date(this.datetime));
 }
@@ -48,15 +48,15 @@ ngOnInit(){
   {
     this.rideId = rideID;
     this.rideService.getRideInfo(this.rideId).subscribe((res: Ride) =>{
-      this.poolDateTime = res.datetime;
-      this.seatsLeft = res.seats;
+    this.poolDateTime = res.datetime;
+    this.seatsLeft = res.seats;
     });
   }
 
   //returns ride data for the currently selected ride.
-  getRideData()
+  getRideData(rideId: string)
   {
-    return this.afs.collection("rides").doc(this.rideId).valueChanges();
+    return this.afs.collection("rides").doc(rideId).valueChanges();
   }
 
   getToFromOffice()
@@ -66,10 +66,11 @@ ngOnInit(){
 
   //future changes to be done - minus 10 minutes nano seconds so booking is visibe 10 minutes after the start of ride.
   getUserBookings(){
+
     //return this.rideCollection.snapshotChanges();
     //return this.afs.collection('rides', ref=> ref.where('toOffice','==', true).orderBy('createdAt')).snapshotChanges();
     //always use snapshotchanges when you want metadata as well with the collection data, it helps with much complex data.
-    return this.afs.collection('bookings',ref => ref.where('userId' ,'==', this.userId).where('poolDateTime','>=',this.datetimeTimestamp)
+    return this.afs.collection('bookings',ref => ref.where('userId' ,'==', this.authService.userId).where('poolDateTime','>=',this.datetimeTimestamp)
     .orderBy('poolDateTime','desc')).snapshotChanges().pipe(
       map(actions => actions.map(a => {
         const data = a.payload.doc.data() as Booking;
@@ -78,20 +79,39 @@ ngOnInit(){
       }))
     );
 
+    //work on this later- for having pooldatetime at just one place, right now it needs to be updated in both rides ad booking tables.
+    /* this.afs.collection('bookings',ref => ref.where('userId' ,'==', this.userId)).valueChanges().subscribe((data: Booking[]) =>{
+      data.forEach(element => {
+        this.afs.collection('rides',ref => ref.where('rideId' ,'==', element.rideId).where('poolDateTime','>=',this.datetimeTimestamp))
+        .valueChanges().subscribe((rideData: Ride[]) =>{
+          if(rideData)
+          {
+            const obj = {...element, ...rideData[0]}
+            this.bookings1.push(obj);
+          }
+          //console.log(this.Users);
+        });
+      });
+
+  }); */
+    
     
   }
 
  addBooking(booking: Booking){
-    booking.rideId = this.rideId;
-    booking.userId = this.userId;
-
+    booking.userId = this.authService.userId;
     //update the number of seats left
-    booking.poolDateTime = this.poolDateTime;
-    this.afs.collection('rides').doc(this.rideId).update({
-      seats : this.seatsLeft - booking.seats
+    //booking.poolDateTime = this.poolDateTime;
+    
+    return this.bookingCollection.add(booking);
+  }
+
+  updateSeats(seatsL : number, seatsB : number, rideId : string)
+  {
+    return this.afs.collection('rides').doc(rideId).update({
+      seats : seatsL - seatsB
     });
 
-    return this.bookingCollection.add(booking);
   }
 
   cancelBooking(bookingId: string, rideId :string, seatsBooked : number)

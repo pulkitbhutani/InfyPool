@@ -29,16 +29,20 @@ export class ProfilePage implements OnInit {
   }
 
   ngOnInit() {
+    console.log('ngon init starts');
     this.getUserDetails();
+    console.log('ngoninti ends');
     //console.log(this.User);
   }
 
   getUserDetails(){
+    
     this.afs.collection('users',ref => ref.where('userId' ,'==', this.userId)).valueChanges()
     .subscribe((data: UserDetail[]) =>{
       this.firstName = data[0].firstName;
       this.lastName = data[0].lastName;
       this.mobileNumber = data[0].mobileNumber;
+      console.log(this.firstName);
   });
 
   //load from vehicledetail table

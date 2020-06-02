@@ -32,8 +32,8 @@ export class AppComponent {
   }
 
   async ngOnInit(){
-    this.checkLoginStatus();
-    this.listenForLoginEvents();
+    //this.checkLoginStatus();
+   // this.listenForLoginEvents();
   }
 
   initializeApp() {
@@ -43,7 +43,7 @@ export class AppComponent {
     });
   }
 
-  isLoggedIn() {
+  /* isLoggedIn() {
     return this.afAuth.authState.pipe(first()).toPromise();
  }
 
@@ -54,7 +54,11 @@ export class AppComponent {
       setTimeout(() => {
         this.loggedIn = true;
       }, 300);
-      this.router.navigate(['/tabs/create']);
+      this.router.navigate(['/rides/tabs/create']);
+    }
+    else
+    {
+      this.router.navigate(['/auth'])
     }
   }
 
@@ -72,12 +76,12 @@ export class AppComponent {
     window.addEventListener('user:signup', () => {
       this.updateLoggedInStatus(true);
     });
-  }
+  } */
 
   logout() {
     this.afAuth.auth.signOut();
     this.loggedIn = false;
-    this.router.navigate(['login']);
+    this.router.navigate(['/auth']);
   }
 
   

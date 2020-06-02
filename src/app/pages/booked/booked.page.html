@@ -14,7 +14,7 @@
                 <ion-card>
                   <ion-card-header *ngIf="booking.poolDateTime<datetimeTimestamp;">
                     
-                      <ion-label color = "Secondary">Booking Started</ion-label>
+                    <ion-label color = "Secondary">Booking Started</ion-label>
                     
                   </ion-card-header>
                   <ion-card-title class="title">
@@ -42,7 +42,7 @@
                           <ion-label>Pool Chat</ion-label>
                           <ion-icon name="chatbubbles"></ion-icon>
                         </ion-segment-button>
-                        <ion-segment-button (click)="poolDetailPage(booking.rideId)">
+                        <ion-segment-button [routerLink]="['/','booked',booking.rideId]">
                           <ion-label>Details</ion-label>
                           <ion-icon name="clipboard"></ion-icon>
                         </ion-segment-button>
@@ -55,7 +55,7 @@
                             <ion-label>Pool Chat</ion-label>
                             <ion-icon name="chatbubbles"></ion-icon>
                           </ion-segment-button>
-                          <ion-segment-button (click)="poolDetailPage(booking.rideId)">
+                          <ion-segment-button [routerLink]="['/','booked',booking.rideId]">
                             <ion-label>Details</ion-label>
                             <ion-icon name="clipboard"></ion-icon>
                           </ion-segment-button>

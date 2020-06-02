@@ -1,0 +1,83 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Create Car Pool</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form (ngSubmit)="createRide()" #f="ngForm"> 
+    <ion-grid class="ion-grid-padding">
+      <ion-row>
+        <ion-col size="6" class="ion-align-self-end">
+            <ion-button (click) = "toggleToOffice()" *ngIf= "!toOffice">to office</ion-button>
+            <ion-button (click) = "toggleToOffice()" *ngIf= "toOffice" color="success">to office</ion-button>
+        </ion-col>
+        <ion-col size="6">
+            <ion-button (click) = "toggleToOffice()" *ngIf= "toOffice">to home</ion-button>
+            <ion-button (click) = "toggleToOffice()" *ngIf= "!toOffice" color="success">to home</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <ion-grid>
+      <ion-row>
+        <ion-col size-sm="6" offset-sm="3">
+          <ion-item>
+            <ion-label>Start Date</ion-label>
+            <ion-datetime placeholder="Select Date" displayFormat="MMM DD, h:mm A" minuteValues="0,10,20,30,40,50" [min]="curDate.toISOString()" [(ngModel)]="datetime" name="start-date" required></ion-datetime>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size-sm="6" offset-sm="3">
+          <ion-item>
+            <ion-label>Destination</ion-label>
+            <ion-label>{{destination}}</ion-label>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size-sm="6" offset-sm="3">
+          <ion-item>
+            <ion-label *ngIf="toOffice; else elseBlock">Pickup Points</ion-label>
+            <ng-template #elseBlock><ion-label>Drop Points</ion-label></ng-template>
+            <ion-select multiple="true" cancelText="Nah" okText="Okay!" [(ngModel)]="locations" name="ride-locations" required>
+              <ion-select-option *ngFor="let point of points | async">{{point.points}}</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size-sm="6" offset-sm="3">
+          <ion-item>
+            <ion-label>Seats</ion-label>
+            <ion-select ok-text="Okay" cancel-text="Nah" [(ngModel)]="seats" name="ride-seats" required>
+              <ion-select-option type="number" [value]=1>1</ion-select-option>
+              <ion-select-option type="number" [value]=2>2</ion-select-option>
+              <ion-select-option type="number" [value]=3>3</ion-select-option>
+              <ion-select-option type="number" [value]=4>4</ion-select-option>
+              <ion-select-option type="number" [value]=5>5</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size-sm="6" offset-sm="3">
+          <ion-item>
+            <ion-label>Price</ion-label>
+            <ion-input type="number" value="45" [(ngModel)]="price" name="ride-price" required></ion-input>
+          </ion-item>
+        </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12">
+        <ion-button type="submit" color="primary" expand="block" [disabled]="!f.valid">Book</ion-button>
+      </ion-col>
+    </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>
+
