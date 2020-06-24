@@ -1,4 +1,4 @@
-# InfyPool Car Pool App
+#  Car Pool App
 
 This is a car pool app made using angular and ionic, and backend is on firebase using firestore.
 
